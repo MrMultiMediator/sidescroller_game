@@ -66,6 +66,7 @@ if __name__ == '__main__':
                         player.keys_down.append('l')
 
             if e.type == pygame.KEYUP:
+                player.frame = 1
                 if e.key == pygame.K_a:
                     player.keys_down.remove('left')
                 elif e.key == pygame.K_d:
@@ -79,6 +80,11 @@ if __name__ == '__main__':
                 elif e.key == pygame.K_j:
                     if 'j' in player.keys_down:
                         player.keys_down.remove('j')
+
+                        if 'ctrl' in player.keys_down:
+                            player.frame = 6
+                            player.status = "kneel"
+                            
                 elif e.key == pygame.K_k:
                     if 'k' in player.keys_down:
                         player.keys_down.remove('k')

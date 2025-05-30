@@ -94,20 +94,22 @@ class Player(Sprite):
                 self.status = "idle"
 
         # Kneel
-        elif "ctrl" in self.keys_down:
+        elif "ctrl" in self.keys_down and "j" not in self.keys_down and "k" not in self.keys_down:
             self.status = "kneel"
 
-        elif "j" in self.keys_down and "shift" not in self.keys_down:
-            if str(self.status) != "jab1":
+        elif "j" in self.keys_down:
+            if "ctrl" not in self.keys_down and "shift" not in self.keys_down and str(self.status) != "jab1":
                 self.status = Action("jab1")
 
-        elif "k" in self.keys_down:
-            if str(self.status) != "kick1":
-                self.status = Action("kick1")
-
-        elif "j" in self.keys_down and "shift" in self.keys_down:
-            if str(self.status) != "uppercut1":
+            if "ctrl" not in self.keys_down and "shift" in self.keys_down and str(self.status) != "uppercut1":
                 self.status = Action("uppercut1")
+
+            if "ctrl" in self.keys_down and "shift" not in self.keys_down and str(self.status) != "kneel_punch1":
+                self.status = Action("kneel_punch1")
+
+        elif "k" in self.keys_down:
+            if "ctrl" not in self.keys_down and str(self.status) != "kick1":
+                self.status = Action("kick1")
 
         elif "l" in self.keys_down:
             self.status = "shoot1"
@@ -171,7 +173,6 @@ class Player(Sprite):
 
     def animate(self):
         self.update_frame()
-
         self.surf = self.surfaces[str(self.status)][self.frame-1]
         if self.direction == "left":
             self.surf = flip(self.surf, True, False)
@@ -198,9 +199,10 @@ class Player(Sprite):
         to change due to a changing bottom location then adjust according to the 
         specifications of the character status"""
         if str(self.status) in self.topology["bottom"].keys():
+            print(f"Found status {str(self.status)} in bottom keys")
             try:
                 self.y = self.bg_info['floor']-self.topology['bottom'][str(self.status)]['values'][self.frame-1]
-            except:
+            except Exception as e:
                 pass
         else:
             self.y = self.bg_info['floor']-self.topology['bottom']['global']
