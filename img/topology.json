@@ -110,6 +110,9 @@
         "global": 57
     },
     "stop": {
-        "kneel": "end"
+        "kneel": "end",
+        "jab1": "beginning",
+        "kick1": "beginning",
+        "uppercut1": "beginning"
     }
 }

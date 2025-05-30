@@ -4,6 +4,14 @@ from pygame import image
 import json
 import os
 
+class Action:
+    def __init__(self, name, status="running"):
+        self.name = name
+        self.status = status
+
+    def __repr__(self):
+        return self.name
+
 class Player(Sprite):
     def __init__(self, window_width, bg_info, xvel=25):
         with open(__file__.replace(os.path.basename(__file__), "")+"/img/topology.json") as f:
@@ -89,6 +97,24 @@ class Player(Sprite):
         elif "ctrl" in self.keys_down:
             self.status = "kneel"
 
+        elif "j" in self.keys_down and "shift" not in self.keys_down:
+            if str(self.status) != "jab1":
+                self.status = Action("jab1")
+
+        elif "k" in self.keys_down:
+            if str(self.status) != "kick1":
+                self.status = Action("kick1")
+
+        elif "j" in self.keys_down and "shift" in self.keys_down:
+            if str(self.status) != "uppercut1":
+                self.status = Action("uppercut1")
+
+        elif "l" in self.keys_down:
+            self.status = "shoot1"
+
+        elif "shift" in self.keys_down and len(self.keys_down) == 1:
+            self.status = "idle"
+
         if len(self.keys_down) == 0:
             self.status = "idle"
 
@@ -122,23 +148,31 @@ class Player(Sprite):
         else:
             raise ValueError("direction argument must be left or right")
     def update_frame(self):
-        if self.status not in self.topology["stop"].keys():
+        if str(self.status) not in self.topology["stop"].keys():
             self.frame += 1
+
+            if self.frame > len(self.surfaces[str(self.status)]):
+                self.frame = 1
+
         else:
             # Special code for animations that specify the animation to stop at the end rather than looping.
             # Increase frame until we reach the end
-            if self.topology["stop"][self.status] == "end" and self.frame < len(self.surfaces[self.status]):
+            if self.topology["stop"][str(self.status)] == "end" and self.frame < len(self.surfaces[str(self.status)]):
                 self.frame += 1
 
-        if self.frame > len(self.surfaces[self.status]):
-            self.frame = 1
+            if self.topology["stop"][str(self.status)] == "beginning":
+                if self.frame == len(self.surfaces[str(self.status)]):
+                    self.frame = 1
+                    self.status.status = "done"
+                elif self.status.status == "running":
+                    self.frame += 1
 
-        #print(f"Frame is {self.frame} : {self.status} : {self.keys_down}")
+        #print(f"Frame is {self.frame} : {str(self.status)} : {self.keys_down}")
 
     def animate(self):
         self.update_frame()
 
-        self.surf = self.surfaces[self.status][self.frame-1]
+        self.surf = self.surfaces[str(self.status)][self.frame-1]
         if self.direction == "left":
             self.surf = flip(self.surf, True, False)
 
@@ -163,9 +197,9 @@ class Player(Sprite):
         """If the current status specifies that the y-position of the character needs 
         to change due to a changing bottom location then adjust according to the 
         specifications of the character status"""
-        if self.status in self.topology["bottom"].keys():
+        if str(self.status) in self.topology["bottom"].keys():
             try:
-                self.y = self.bg_info['floor']-self.topology['bottom'][self.status]['values'][self.frame-1]
+                self.y = self.bg_info['floor']-self.topology['bottom'][str(self.status)]['values'][self.frame-1]
             except:
                 pass
         else:

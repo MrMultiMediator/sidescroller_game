@@ -53,6 +53,18 @@ if __name__ == '__main__':
                     if 'ctrl' not in player.keys_down:
                         player.keys_down.append('ctrl')
 
+                elif e.key == pygame.K_j:
+                    if 'j' not in player.keys_down:
+                        player.keys_down.append('j')
+
+                elif e.key == pygame.K_k:
+                    if 'k' not in player.keys_down:
+                        player.keys_down.append('k')
+
+                elif e.key == pygame.K_l:
+                    if 'l' not in player.keys_down:
+                        player.keys_down.append('l')
+
             if e.type == pygame.KEYUP:
                 if e.key == pygame.K_a:
                     player.keys_down.remove('left')
@@ -64,6 +76,15 @@ if __name__ == '__main__':
                 elif e.key == pygame.K_RCTRL or e.key == pygame.K_LCTRL:
                     if 'ctrl' in player.keys_down:
                         player.keys_down.remove('ctrl')
+                elif e.key == pygame.K_j:
+                    if 'j' in player.keys_down:
+                        player.keys_down.remove('j')
+                elif e.key == pygame.K_k:
+                    if 'k' in player.keys_down:
+                        player.keys_down.remove('k')
+                elif e.key == pygame.K_l:
+                    if 'l' in player.keys_down:
+                        player.keys_down.remove('l')
 
 
         surf.fill((0,0,200))
