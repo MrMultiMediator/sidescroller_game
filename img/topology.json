@@ -99,20 +99,35 @@
         "kneel": {
             "method": "track",
             "values": [
-                57,
-                56,
-                54,
-                52,
-                48,
-                44
+                228,
+                224,
+                216,
+                208,
+                192,
+                176
             ]
         },
-        "global": 57
+        "kneel_punch1": {
+            "method": "track",
+            "values": [
+                176,
+                176,
+                176,
+                176,
+                176,
+                176,
+                176,
+                176,
+                176
+            ]
+        },
+        "global": 228
     },
     "stop": {
         "kneel": "end",
         "jab1": "beginning",
         "kick1": "beginning",
-        "uppercut1": "beginning"
+        "uppercut1": "beginning",
+        "kneel_punch1": "beginning"
     }
 }
