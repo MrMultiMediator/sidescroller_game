@@ -13,6 +13,17 @@ def update_screen(surf, bg, player):
     surf.blit(bg.surf, (bg.x, 0))
     surf.blit(player.surf, (player.x, player.y))
 
+used_keys = [
+    pygame.K_a,
+    pygame.K_d,
+    pygame.K_j,
+    pygame.K_k,
+    pygame.K_l,
+    pygame.K_RSHIFT,
+    pygame.K_LSHIFT,
+    pygame.K_RCTRL,
+    pygame.K_LCTRL
+]
 
 if __name__ == '__main__':
     pygame.init()
@@ -37,13 +48,15 @@ if __name__ == '__main__':
                 terminate_game_loop = True
                 break
 
-            if e.type == pygame.KEYDOWN:
+            if e.type == pygame.KEYDOWN and e.key in used_keys:
                 player.frame = 1
                 if e.key == pygame.K_a:
-                    player.keys_down.append('left')
+                    if "left" not in player.keys_down:
+                        player.keys_down.append('left')
 
                 elif e.key == pygame.K_d:
-                    player.keys_down.append('right')
+                    if "right" not in player.keys_down:
+                        player.keys_down.append('right')
 
                 elif e.key == pygame.K_RSHIFT or e.key == pygame.K_LSHIFT:
                     if 'shift' not in player.keys_down:
@@ -65,7 +78,7 @@ if __name__ == '__main__':
                     if 'l' not in player.keys_down:
                         player.keys_down.append('l')
 
-            if e.type == pygame.KEYUP:
+            if e.type == pygame.KEYUP and e.key in used_keys:
                 player.frame = 1
                 if e.key == pygame.K_a:
                     player.keys_down.remove('left')

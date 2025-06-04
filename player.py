@@ -130,6 +130,9 @@ class Player(Sprite):
         if "shift" in self.keys_down:
             self.status = "run"
             self.x_vel = 40
+        elif "ctrl" in self.keys_down:
+            self.status = "kneel_walk"
+            self.x_vel = 10
         else:
             self.status = "walk"
             self.x_vel = 25
@@ -199,7 +202,6 @@ class Player(Sprite):
         to change due to a changing bottom location then adjust according to the 
         specifications of the character status"""
         if str(self.status) in self.topology["bottom"].keys():
-            print(f"Found status {str(self.status)} in bottom keys")
             try:
                 self.y = self.bg_info['floor']-self.topology['bottom'][str(self.status)]['values'][self.frame-1]
             except Exception as e:
