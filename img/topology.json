@@ -154,5 +154,23 @@
         "kick1": "beginning",
         "uppercut1": "beginning",
         "kneel_punch1": "beginning"
+    },
+    "bottom_terminate": {
+        "jump": {
+            "method": "track",
+            "values": [
+                222,
+                216,
+                202,
+                182,
+                160,
+                141
+            ]
+        }
+    },
+    "jump": {
+        "jump": {
+            "method": "default"
+        }
     }
 }

@@ -13,6 +13,8 @@ def update_screen(surf, bg, player):
     surf.blit(bg.surf, (bg.x, 0))
     surf.blit(player.surf, (player.x, player.y))
 
+gravity = 5 # gravitational acceleration
+
 used_keys = [
     pygame.K_a,
     pygame.K_d,
@@ -37,7 +39,7 @@ if __name__ == '__main__':
     bg = Background("img/background.png")
 
     xvel = 40
-    player = Player(window.width, bg.info, xvel=xvel)
+    player = Player(window.width, bg.info, gravity, xvel=xvel)
 
 
     while not terminate_game_loop:

@@ -13,7 +13,7 @@ class Action:
         return self.name
 
 class Player(Sprite):
-    def __init__(self, window_width, bg_info, xvel=25):
+    def __init__(self, window_width, bg_info, gravity, xvel=25):
         with open(__file__.replace(os.path.basename(__file__), "")+"/img/topology.json") as f:
             self.topology = json.load(f)
         self.window_width = window_width
@@ -23,6 +23,8 @@ class Player(Sprite):
             self.still_coords = {'x':800, 'y':200}
         self.x = self.still_coords['x']
         self.y = self.still_coords['y']
+        self.gravity = gravity
+        self.jump_strength = 40
         self.x_vel = xvel
         self.frame = 1
         self.direction = 'right'
@@ -127,7 +129,9 @@ class Player(Sprite):
         return delta
 
     def walk_run_setup(self):
-        if "shift" in self.keys_down:
+        if self.status == "jump":
+            pass
+        elif "shift" in self.keys_down:
             self.status = "run"
             self.x_vel = 40
         elif "ctrl" in self.keys_down:
@@ -208,3 +212,11 @@ class Player(Sprite):
                 pass
         else:
             self.y = self.bg_info['floor']-self.topology['bottom']['global']
+
+    def bottom_terminate(self):
+        """Terminate an animation, like a jump for example, if the bottom of the
+        character reaches the ground at whatever frame they're in."""
+        if str(self.status) in self.topology["bottom_terminate"].keys():
+            if self.y + self.topology['bottom_terminate'][str(self.status)]['values'][self.frame-1] > self.bg_info['floor']:
+                self.status = "idle"
+                self.frame = 1
