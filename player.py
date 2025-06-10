@@ -24,7 +24,7 @@ class Player(Sprite):
         self.x = self.still_coords['x']
         self.y = self.still_coords['y']
         self.gravity = gravity
-        self.jump_strength = 40
+        self.jump_strength = 60
         self.x_vel = xvel
         self.y_vel = 0.
         self.frame = 1
@@ -177,11 +177,14 @@ class Player(Sprite):
         else:
             raise ValueError("direction argument must be left or right")
     def update_frame(self):
-        if str(self.status) not in self.topology["stop"].keys():
+        if str(self.status) not in self.topology["stop"].keys() and str(self.status) != "jump":
             self.frame += 1
 
             if self.frame > len(self.surfaces[str(self.status)]):
                 self.frame = 1
+
+        elif str(self.status) == "jump":
+            self.jump_frame_control()
 
         else:
             # Special code for animations that specify the animation to stop at the end rather than looping.
@@ -241,3 +244,12 @@ class Player(Sprite):
                 self.status = "idle"
                 self.frame = 1
                 self.y = self.still_coords['y']
+
+    def jump_frame_control(self):
+        """For jump animation, control how the animation is displayed"""
+        if self.y_vel >= 0:
+            if self.frame < len(self.surfaces[str(self.status)]):
+                self.frame += 1
+        else:
+            if self.frame > 1:
+                self.frame -= 1
