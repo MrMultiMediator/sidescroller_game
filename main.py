@@ -24,7 +24,8 @@ used_keys = [
     pygame.K_RSHIFT,
     pygame.K_LSHIFT,
     pygame.K_RCTRL,
-    pygame.K_LCTRL
+    pygame.K_LCTRL,
+    pygame.K_SPACE
 ]
 
 if __name__ == '__main__':
@@ -106,6 +107,8 @@ if __name__ == '__main__':
                 elif e.key == pygame.K_l:
                     if 'l' in player.keys_down:
                         player.keys_down.remove('l')
+                elif e.key == pygame.K_SPACE:
+                    player.status = "jump"
 
 
         surf.fill((0,0,200))

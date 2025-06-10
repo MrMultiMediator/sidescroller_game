@@ -26,6 +26,7 @@ class Player(Sprite):
         self.gravity = gravity
         self.jump_strength = 40
         self.x_vel = xvel
+        self.y_vel = 0.
         self.frame = 1
         self.direction = 'right'
         self.status = 'idle'
@@ -46,6 +47,9 @@ class Player(Sprite):
 
         #disp.blit(self.surf, self.surf.get_rect())
         #disp.blit(self.surf, (self.x, self.y))
+
+        if "right" not in self.keys_down and "left" not in self.keys_down:
+            self.x_vel = 0
 
         # Move right
         if "right" in self.keys_down:
@@ -69,7 +73,8 @@ class Player(Sprite):
                 else:
                     delta = -self.x_vel
             else:
-                self.status = "idle"
+                if str(self.status) != "jump":
+                    self.status = "idle"
 
         # Move left
         elif "left" in self.keys_down:
@@ -93,7 +98,11 @@ class Player(Sprite):
                 else:
                     delta = self.x_vel
             else:
-                self.status = "idle"
+                if str(self.status) != "jump":
+                    self.status = "idle"
+
+        elif str(self.status) == "jump":
+            pass
 
         # Kneel
         elif "ctrl" in self.keys_down and "j" not in self.keys_down and "k" not in self.keys_down:
@@ -119,10 +128,12 @@ class Player(Sprite):
         elif "shift" in self.keys_down and len(self.keys_down) == 1:
             self.status = "idle"
 
-        if len(self.keys_down) == 0:
+        if len(self.keys_down) == 0 and self.status != "jump":
             self.status = "idle"
 
         self.adjust_y_to_bottom()
+
+        self.bottom_terminate()
 
         self.animate()
 
@@ -217,6 +228,7 @@ class Player(Sprite):
         """Terminate an animation, like a jump for example, if the bottom of the
         character reaches the ground at whatever frame they're in."""
         if str(self.status) in self.topology["bottom_terminate"].keys():
-            if self.y + self.topology['bottom_terminate'][str(self.status)]['values'][self.frame-1] > self.bg_info['floor']:
+            if self.y + self.topology['bottom_terminate'][str(self.status)]['values'][self.frame-1] >= self.bg_info['floor']:
                 self.status = "idle"
                 self.frame = 1
+                self.y = self.still_coords['y']
