@@ -102,7 +102,8 @@ class Player(Sprite):
                     self.status = "idle"
 
         elif str(self.status) == "jump":
-            pass
+            self.y -= self.y_vel
+            self.y_vel -= self.gravity
 
         # Kneel
         elif "ctrl" in self.keys_down and "j" not in self.keys_down and "k" not in self.keys_down:
@@ -141,7 +142,15 @@ class Player(Sprite):
 
     def walk_run_setup(self):
         if self.status == "jump":
-            pass
+            self.y -= self.y_vel
+            self.y_vel -= self.gravity
+
+            if "shift" in self.keys_down:
+                self.x_vel = 40
+            elif "ctrl" in self.keys_down:
+                self.x_vel = 10
+            else:
+                self.x_vel = 25
         elif "shift" in self.keys_down:
             self.status = "run"
             self.x_vel = 40
@@ -221,7 +230,7 @@ class Player(Sprite):
                 self.y = self.bg_info['floor']-self.topology['bottom'][str(self.status)]['values'][self.frame-1]
             except Exception as e:
                 pass
-        else:
+        elif str(self.status) != "jump":
             self.y = self.bg_info['floor']-self.topology['bottom']['global']
 
     def bottom_terminate(self):

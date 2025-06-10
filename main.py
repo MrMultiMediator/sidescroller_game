@@ -108,7 +108,9 @@ if __name__ == '__main__':
                     if 'l' in player.keys_down:
                         player.keys_down.remove('l')
                 elif e.key == pygame.K_SPACE:
-                    player.status = "jump"
+                    if player.status != "jump":
+                        player.status = "jump"
+                        player.y_vel = player.jump_strength
 
 
         surf.fill((0,0,200))
