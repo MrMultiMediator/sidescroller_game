@@ -1,6 +1,7 @@
 from pygame.sprite import Sprite
 from pygame.transform import flip
-from pygame import image
+from pygame import image, Surface
+import pygame
 import json
 import os
 
@@ -12,8 +13,28 @@ class Action:
     def __repr__(self):
         return self.name
 
+class HealthBar:
+    def __init__(self, bg_w, bg_h, max_hp, max_shield):
+        "Make the dimensions and placement of the healthbar proportional to the size of the game background"
+        self.max_hp = max_hp
+        self.max_shield = max_shield
+        self.x = bg_w*0.85
+        self.y = bg_h*0.05
+        self.w = bg_w*0.1
+        self.h = bg_h*0.015
+
+        self.surf = Surface((int(self.w), int(self.h)))
+
+    def draw(self, hp, shield):
+        ratio = hp / self.max_hp
+        ratio_shield = shield / self.max_shield
+
+        pygame.draw.rect(self.surf, "red", (0., 0., self.w, self.h))
+        pygame.draw.rect(self.surf, "green", (0., 0., self.w*ratio, self.h))
+        pygame.draw.rect(self.surf, "blue", (0., 0., self.w*ratio_shield, self.h))
+
 class Player(Sprite):
-    def __init__(self, window_width, bg_info, gravity, xvel=25):
+    def __init__(self, window_width, window_height, bg_info, gravity, xvel=25):
         with open(__file__.replace(os.path.basename(__file__), "")+"/img/topology.json") as f:
             self.topology = json.load(f)
         self.window_width = window_width
@@ -25,6 +46,11 @@ class Player(Sprite):
         self.y = self.still_coords['y']
         self.gravity = gravity
         self.jump_strength = 60
+        self.max_hp = 1000.
+        self.hp = self.max_hp
+        self.max_shield = 1000.
+        self.shield = self.max_shield
+        self.health_bar = HealthBar(window_width, window_height, self.max_hp, self.max_shield)
         self.x_vel = xvel
         self.y_vel = 0.
         self.frame = 1
@@ -37,9 +63,8 @@ class Player(Sprite):
         self.surf = image.load(self.imfile).convert_alpha()
         self.keys_down = []
         self.load_images()
-        print(self.surfaces)
 
-    def update(self, disp, bg):
+    def update(self, bg):
         # delta is how much all the objects should shift to keep the frame of
         # reference w/ the player at the center. If delta remains at zero,
         # that means the player has reached the end of the map and must move.
@@ -137,6 +162,8 @@ class Player(Sprite):
         self.bottom_terminate()
 
         self.animate()
+
+        self.health_bar.draw(self.hp, self.shield)
 
         return delta
 

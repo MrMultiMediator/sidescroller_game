@@ -12,6 +12,7 @@ class Window:
 def update_screen(surf, bg, player):
     surf.blit(bg.surf, (bg.x, 0))
     surf.blit(player.surf, (player.x, player.y))
+    surf.blit(player.health_bar.surf, (player.health_bar.x, player.health_bar.y))
 
 gravity = 5 # gravitational acceleration
 
@@ -40,7 +41,7 @@ if __name__ == '__main__':
     bg = Background("img/background.png")
 
     xvel = 40
-    player = Player(window.width, bg.info, gravity, xvel=xvel)
+    player = Player(window.width, window.height, bg.info, gravity, xvel=xvel)
 
 
     while not terminate_game_loop:
@@ -116,7 +117,7 @@ if __name__ == '__main__':
         surf.fill((0,0,200))
         #surf.blit(bg.surf, (bg.x,0))
 
-        delta = player.update(surf, bg)
+        delta = player.update(bg)
         bg.update(surf, delta)
         update_screen(surf, bg, player)
 
