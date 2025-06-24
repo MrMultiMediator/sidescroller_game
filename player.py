@@ -54,6 +54,7 @@ class Player(Sprite):
         self.x_vel = xvel
         self.y_vel = 0.
         self.frame = 1
+        self.time = 0
         self.direction = 'right'
         self.status = 'idle'
         self.bg_info = bg_info
@@ -69,6 +70,8 @@ class Player(Sprite):
         # reference w/ the player at the center. If delta remains at zero,
         # that means the player has reached the end of the map and must move.
         delta = 0
+
+        self.time += 1
 
         #disp.blit(self.surf, self.surf.get_rect())
         #disp.blit(self.surf, (self.x, self.y))
@@ -133,6 +136,7 @@ class Player(Sprite):
         # Kneel
         elif "ctrl" in self.keys_down and "j" not in self.keys_down and "k" not in self.keys_down:
             self.status = "kneel"
+            self.take_damage(0.1*self.max_hp)
 
         elif "j" in self.keys_down:
             if "ctrl" not in self.keys_down and "shift" not in self.keys_down and str(self.status) != "jab1":
@@ -163,7 +167,7 @@ class Player(Sprite):
 
         self.animate()
 
-        self.health_bar.draw(self.hp, self.shield)
+        self.update_health()
 
         return delta
 
@@ -250,6 +254,28 @@ class Player(Sprite):
             for frame in range(img_js[animation]["frames"][0], img_js[animation]["frames"][1]+1):
                 filename = f"{self.imgdir}/{self.status_fname[animation]}_{frame}.{ext}"
                 self.surfaces[animation].append(image.load(filename).convert_alpha())
+
+    def update_health(self):
+        # Every 1/10th of a second, recharge shields by 2%
+        if self.time % 3 == 0:
+            if self.shield < self.max_shield:
+                self.shield += self.max_shield*0.02
+
+            if self.shield > self.max_shield:
+                self.shield = self.max_shield
+
+        self.health_bar.draw(self.hp, self.shield)
+
+    def take_damage(self, amount):
+        if self.shield > 0:
+            if self.shield >= amount:
+                self.shield -= amount
+            else:
+                amount -= self.shield
+                self.shield = 0
+                self.hp -= amount
+        else:
+            self.hp -= amount
 
     def adjust_y_to_bottom(self):
         """If the current status specifies that the y-position of the character needs 
