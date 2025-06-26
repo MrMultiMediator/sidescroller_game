@@ -79,8 +79,10 @@ class Player(Sprite):
         if "right" not in self.keys_down and "left" not in self.keys_down:
             self.x_vel = 0
 
+        if self.status == "fall1":
+            pass
         # Move right
-        if "right" in self.keys_down:
+        elif "right" in self.keys_down:
             if "left" not in self.keys_down:
                 self.direction = "right"
                 self.walk_run_setup()
@@ -158,7 +160,7 @@ class Player(Sprite):
         elif "shift" in self.keys_down and len(self.keys_down) == 1:
             self.status = "idle"
 
-        if len(self.keys_down) == 0 and self.status != "jump":
+        if len(self.keys_down) == 0 and self.status != "jump" and self.status != "fall1":
             self.status = "idle"
 
         self.adjust_y_to_bottom()
@@ -167,7 +169,8 @@ class Player(Sprite):
 
         self.animate()
 
-        self.update_health()
+        if self.status != "fall1":
+            self.update_health()
 
         return delta
 
@@ -276,6 +279,10 @@ class Player(Sprite):
                 self.hp -= amount
         else:
             self.hp -= amount
+
+        if self.hp <= 0:
+            self.hp = 0
+            self.status = "fall1"
 
     def adjust_y_to_bottom(self):
         """If the current status specifies that the y-position of the character needs 

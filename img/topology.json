@@ -1,43 +1,43 @@
 {
     "idle-running2": {
         "base_shift": [
-            -3,
+            -16,
             0
         ]
     },
     "idle-leaning1": {
         "base_shift": [
-            -11,
+            -27,
             0
         ]
     },
     "idle-start_running1": {
         "base_shift": [
-            -5,
+            -16,
             0
         ]
     },
     "idle-running1": {
         "base_shift": [
-            -9,
-            0
+            -26,
+            2
         ]
     },
     "idle-run": {
         "base_shift": [
-            -21,
-            0
+            -53,
+            2
         ]
     },
     "idle-walk": {
         "base_shift": [
-            -5,
+            -16,
             0
         ]
     },
     "idle-kneel1": {
         "base_shift": [
-            -14,
+            -38,
             0
         ]
     },
@@ -55,43 +55,43 @@
     },
     "idle-jab1": {
         "base_shift": [
-            0,
+            -2,
             0
         ]
     },
     "idle-kneel_walk1": {
         "base_shift": [
-            -18,
-            0
+            -44,
+            1
         ]
     },
     "idle-wind_up_punch1": {
         "base_shift": [
-            -5,
-            1
+            -14,
+            0
         ]
     },
     "idle-kneel_punch1": {
         "base_shift": [
-            -18,
-            0
+            -44,
+            1
         ]
     },
     "idle-kick1": {
-        "base_shift": [
-            -7,
-            0
-        ]
-    },
-    "idle-fall1": {
         "base_shift": [
             -22,
             0
         ]
     },
+    "idle-fall1": {
+        "base_shift": [
+            -59,
+            -1
+        ]
+    },
     "idle-uppercut1": {
         "base_shift": [
-            -4,
+            -15,
             0
         ]
     },
@@ -99,72 +99,86 @@
         "kneel": {
             "method": "track",
             "values": [
-                228,
-                224,
-                216,
-                208,
-                192,
-                176
+                131,
+                131,
+                127,
+                121,
+                112,
+                101
             ]
         },
         "kneel_punch1": {
-            "method": "track",
+            "method": "linear",
             "values": [
-                176,
-                176,
-                176,
-                176,
-                176,
-                176,
-                176,
-                176,
-                176
+                98,
+                98,
+                98,
+                98,
+                98,
+                98,
+                98,
+                98,
+                98
             ]
         },
         "kneel_walk": {
-            "method": "track",
+            "method": "const",
+            "frame": 1,
             "values": [
-                176,
-                176,
-                176,
-                176,
-                176,
-                176,
-                176,
-                176,
-                176,
-                176,
-                176,
-                176,
-                176,
-                176,
-                176,
-                176,
-                176,
-                176,
-                176,
-                176
+                98,
+                98,
+                98,
+                98,
+                98,
+                98,
+                98,
+                98,
+                98,
+                98,
+                98,
+                98,
+                98,
+                98,
+                98,
+                98,
+                98,
+                98,
+                98,
+                98
             ]
         },
-        "global": 228
+        "fall1": {
+            "method": "linear",
+            "values": [
+                132,
+                123,
+                114,
+                105,
+                96,
+                87,
+                78
+            ]
+        },
+        "global": 131
     },
     "stop": {
         "kneel": "end",
         "jab1": "beginning",
         "kick1": "beginning",
         "uppercut1": "beginning",
-        "kneel_punch1": "beginning"
+        "kneel_punch1": "beginning",
+        "fall1": "end"
     },
     "bottom_terminate": {
         "jump": {
             "method": "track",
             "values": [
-                222,
-                216,
-                202,
-                182,
-                160,
-                141
+                131,
+                126,
+                117,
+                106,
+                93,
+                90
             ]
         }
     },

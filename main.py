@@ -52,6 +52,9 @@ if __name__ == '__main__':
                 terminate_game_loop = True
                 break
 
+            if player.status == "fall1":
+                continue
+
             if e.type == pygame.KEYDOWN and e.key in used_keys:
                 player.frame = 1
                 if e.key == pygame.K_a:
