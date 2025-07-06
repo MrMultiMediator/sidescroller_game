@@ -73,6 +73,9 @@ class Player(Sprite):
 
         self.time += 1
 
+        if self.time > 10000000:
+            self.time = 0
+
         #disp.blit(self.surf, self.surf.get_rect())
         #disp.blit(self.surf, (self.x, self.y))
 
