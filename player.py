@@ -13,6 +13,7 @@ class Action:
     def __repr__(self):
         return self.name
 
+
 class HealthBar:
     def __init__(self, bg_w, bg_h, max_hp, max_shield):
         "Make the dimensions and placement of the healthbar proportional to the size of the game background"
@@ -33,8 +34,10 @@ class HealthBar:
         pygame.draw.rect(self.surf, "green", (0., 0., self.w*ratio, self.h))
         pygame.draw.rect(self.surf, "blue", (0., 0., self.w*ratio_shield, self.h))
 
+
 class Player(Sprite):
     def __init__(self, window_width, window_height, bg_info, gravity, xvel=25):
+        self.imgdir = "img/player"
         with open(__file__.replace(os.path.basename(__file__), "")+"/img/topology.json") as f:
             self.topology = json.load(f)
         self.window_width = window_width
@@ -59,11 +62,11 @@ class Player(Sprite):
         self.status = 'idle'
         self.bg_info = bg_info
         self.bg_edge = True # Specifies whether the character should move or the background should move
-        self.imgdir = "img"
         self.imfile = f"{self.imgdir}/{self.status}_{self.frame}.png"
         self.surf = image.load(self.imfile).convert_alpha()
         self.keys_down = []
         self.load_images()
+
 
     def update(self, bg):
         # delta is how much all the objects should shift to keep the frame of
@@ -72,9 +75,6 @@ class Player(Sprite):
         delta = 0
 
         self.time += 1
-
-        if self.time > 10000000:
-            self.time = 0
 
         #disp.blit(self.surf, self.surf.get_rect())
         #disp.blit(self.surf, (self.x, self.y))
@@ -177,6 +177,7 @@ class Player(Sprite):
 
         return delta
 
+
     def walk_run_setup(self):
         if self.status == "jump":
             self.y -= self.y_vel
@@ -198,6 +199,7 @@ class Player(Sprite):
             self.status = "walk"
             self.x_vel = 25
 
+
     def _boundary_reached(self, direction):
         if direction.lower() == 'left':
             if self.x - self.x_vel < 0:
@@ -213,6 +215,8 @@ class Player(Sprite):
 
         else:
             raise ValueError("direction argument must be left or right")
+
+
     def update_frame(self):
         if str(self.status) not in self.topology["stop"].keys() and str(self.status) != "jump":
             self.frame += 1
@@ -238,6 +242,7 @@ class Player(Sprite):
 
         #print(f"Frame is {self.frame} : {str(self.status)} : {self.keys_down}")
 
+
     def animate(self):
         self.update_frame()
         self.surf = self.surfaces[str(self.status)][self.frame-1]
@@ -260,6 +265,7 @@ class Player(Sprite):
             for frame in range(img_js[animation]["frames"][0], img_js[animation]["frames"][1]+1):
                 filename = f"{self.imgdir}/{self.status_fname[animation]}_{frame}.{ext}"
                 self.surfaces[animation].append(image.load(filename).convert_alpha())
+
 
     def update_health(self):
         # Every 1/10th of a second, recharge shields by 2%
@@ -287,9 +293,10 @@ class Player(Sprite):
             self.hp = 0
             self.status = "fall1"
 
+
     def adjust_y_to_bottom(self):
-        """If the current status specifies that the y-position of the character needs 
-        to change due to a changing bottom location then adjust according to the 
+        """If the current status specifies that the y-position of the character needs
+        to change due to a changing bottom location then adjust according to the
         specifications of the character status"""
         if str(self.status) in self.topology["bottom"].keys():
             try:
@@ -308,6 +315,7 @@ class Player(Sprite):
                 self.frame = 1
                 self.y = self.still_coords['y']
 
+
     def jump_frame_control(self):
         """For jump animation, control how the animation is displayed"""
         if self.y_vel >= 0:
@@ -316,3 +324,4 @@ class Player(Sprite):
         else:
             if self.frame > 1:
                 self.frame -= 1
+
