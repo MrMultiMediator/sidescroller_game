@@ -1,0 +1,13 @@
+At every frame, an enemy will have to decide whether to change their status, or remain in their
+current status. Then they will follow the script for that status.
+
+Enemy type: fighter
+Attack script: Move towards the character until one is close enough, and then attack
+Retreat script: Move away from the character when shields are low to recover
+
+
+Enemy type: lobber
+Attack script: Move towards the character until they're in range, then throw grenade.
+
+
+Enemy type: Sky bombs. They just fall from the sky and need to be dodged
