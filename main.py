@@ -1,5 +1,6 @@
 from background import Background
 from player import Player
+from bot import Bot
 import pygame
 import sys
 
@@ -9,10 +10,13 @@ class Window:
         self.height = height
 
 
-def update_screen(surf, bg, player):
+def update_screen(surf, bg, player, enemies):
     surf.blit(bg.surf, (bg.x, 0))
     surf.blit(player.surf, (player.x, player.y))
     surf.blit(player.health_bar.surf, (player.health_bar.x, player.health_bar.y))
+
+    for enemy in enemies:
+        surf.blit(enemy.surf, (enemy.x, enemy.y))
 
 gravity = 5 # gravitational acceleration
 
@@ -43,6 +47,9 @@ if __name__ == '__main__':
     xvel = 40
     player = Player(window.width, window.height, bg.info, gravity, xvel=xvel)
 
+    enemies = [
+        Bot(1700, player.gravity, "img/enemies/e1", bg.info)
+    ]
 
     while not terminate_game_loop:
         clock.tick(30)
@@ -122,7 +129,10 @@ if __name__ == '__main__':
 
         delta = player.update(bg)
         bg.update(surf, delta)
-        update_screen(surf, bg, player)
+        for enemy in enemies:
+            enemy.update(delta)
+
+        update_screen(surf, bg, player, enemies)
 
         disp.blit(surf, (0,0))
         pygame.display.update()
