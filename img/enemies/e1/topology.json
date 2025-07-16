@@ -1,0 +1,190 @@
+{
+    "idle-running2": {
+        "base_shift": [
+            -12,
+            0
+        ]
+    },
+    "idle-leaning1": {
+        "base_shift": [
+            -30,
+            0
+        ]
+    },
+    "idle-start_running1": {
+        "base_shift": [
+            -7,
+            -1
+        ]
+    },
+    "idle-running1": {
+        "base_shift": [
+            -23,
+            0
+        ]
+    },
+    "idle-run": {
+        "base_shift": [
+            -50,
+            0
+        ]
+    },
+    "idle-walk": {
+        "base_shift": [
+            -14,
+            0
+        ]
+    },
+    "idle-kneel1": {
+        "base_shift": [
+            -37,
+            -1
+        ]
+    },
+    "idle-squat1": {
+        "base_shift": [
+            0,
+            -1
+        ]
+    },
+    "idle-shoot1": {
+        "base_shift": [
+            0,
+            0
+        ]
+    },
+    "idle-jab1": {
+        "base_shift": [
+            0,
+            0
+        ]
+    },
+    "idle-kneel_walk1": {
+        "base_shift": [
+            -43,
+            0
+        ]
+    },
+    "idle-wind_up_punch1": {
+        "base_shift": [
+            -12,
+            -1
+        ]
+    },
+    "idle-kneel_punch1": {
+        "base_shift": [
+            -43,
+            0
+        ]
+    },
+    "idle-kick1": {
+        "base_shift": [
+            -12,
+            0
+        ]
+    },
+    "idle-fall1": {
+        "base_shift": [
+            -37,
+            0
+        ]
+    },
+    "idle-uppercut1": {
+        "base_shift": [
+            -14,
+            -2
+        ]
+    },
+    "bottom": {
+        "kneel": {
+            "method": "track",
+            "values": [
+                123,
+                122,
+                118,
+                109,
+                100,
+                88
+            ]
+        },
+        "kneel_punch1": {
+            "method": "linear",
+            "values": [
+                87,
+                87,
+                87,
+                87,
+                87,
+                87,
+                87,
+                87,
+                87
+            ]
+        },
+        "kneel_walk": {
+            "method": "const",
+            "frame": 1,
+            "values": [
+                87,
+                87,
+                87,
+                87,
+                87,
+                87,
+                87,
+                87,
+                87,
+                87,
+                87,
+                87,
+                87,
+                87,
+                87,
+                87,
+                87,
+                87,
+                87,
+                87
+            ]
+        },
+        "fall1": {
+            "method": "linear",
+            "values": [
+                122,
+                114,
+                106,
+                98,
+                90,
+                82,
+                75
+            ]
+        },
+        "global": 122
+    },
+    "stop": {
+        "kneel": "end",
+        "jab1": "beginning",
+        "kick1": "beginning",
+        "uppercut1": "beginning",
+        "kneel_punch1": "beginning",
+        "fall1": "end"
+    },
+    "bottom_terminate": {
+        "jump": {
+            "method": "track",
+            "values": [
+                123,
+                118,
+                108,
+                94,
+                80,
+                77
+            ]
+        }
+    },
+    "jump": {
+        "jump": {
+            "method": "default"
+        }
+    }
+}
