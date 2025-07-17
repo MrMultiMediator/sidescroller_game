@@ -1,6 +1,6 @@
 from background import Background
 from player import Player
-from bot import Bot
+from enemies.fighter import Fighter
 import pygame
 import sys
 
@@ -48,7 +48,7 @@ if __name__ == '__main__':
     player = Player(window.width, window.height, bg.info, gravity, xvel=xvel)
 
     enemies = [
-        Bot(1700, player.gravity, "img/enemies/e1", bg.info)
+        Fighter(1700, player.gravity, "img/enemies/e1", bg.info)
     ]
 
     while not terminate_game_loop:

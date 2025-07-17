@@ -16,8 +16,19 @@ class Bot:
     character and the enemies, both shield and shield2. Shield2 is the active shield
     that only the player has. Shield is something that everyone has by default.
     """
-    def __init__(self, x, gravity, my_dir, bg_info, y=None, xvel=50, move="null"):
-        with open(__file__.replace(os.path.basename(__file__), "")+f"{my_dir}/topology.json") as f:
+    def __init__(
+        self,
+        x,
+        gravity,
+        my_dir,
+        bg_info,
+        y=None,
+        xvel=50,
+        move: str = "null",
+        max_hp=1000.,
+        max_shield=1000.
+    ):
+        with open(__file__.replace(os.path.basename(__file__), "")+f"../{my_dir}/topology.json") as f:
             self.topology = json.load(f)
         try:
             self.still_coords = {'y': bg_info['floor']-self.topology['bottom']['global']}
@@ -29,9 +40,9 @@ class Bot:
         else:
             self.y = y
         self.gravity = gravity
-        self.max_hp = 1000.
+        self.max_hp = max_hp
         self.hp = self.max_hp
-        self.max_shield = 1000.
+        self.max_shield = max_shield
         self.shield = self.max_shield
         self.x_vel = xvel
         self.frame = 1
@@ -57,12 +68,6 @@ class Bot:
 
         if self.time > 10000000:
             self.time = 0
-
-        if self.move == "right":
-            self.x += x_vel
-            
-        elif self.move == "left":
-            self.x -= x_vel
 
     def decide(self):
         "Decision to change one's status"
