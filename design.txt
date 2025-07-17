@@ -18,6 +18,8 @@ Attack script: Move towards the character until they're in range, then throw gre
 Enemy type: Sky bombs. They just fall from the sky and need to be dodged
 
 
+Enemy type: Kamikaze. Run towards the player and explode on impact.
+
 
 Potions appear and the player can grab them and drink them to recover health. They can carry
 up to 3 potions.

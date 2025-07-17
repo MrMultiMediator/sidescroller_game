@@ -15,6 +15,12 @@ class Bot:
     Nothing = Shield recovery. All shields recover over a period of time for both the
     character and the enemies, both shield and shield2. Shield2 is the active shield
     that only the player has. Shield is something that everyone has by default.
+
+    critical_*: The probability of changing state from retreat to attack increases as
+    the shield and health approach these thresholds. Below these, the probability goes
+    to a high 95% and stays there.
+    happy_shield: The probability of changing state from retreat to attack goes up as
+    the shield goes up toward this threshold.
     """
     def __init__(
         self,
@@ -26,7 +32,10 @@ class Bot:
         xvel=50,
         move: str = "null",
         max_hp=1000.,
-        max_shield=1000.
+        max_shield=1000.,
+        critical_health=0.4,
+        critical_shield=0.2,
+        happy_shield=0.65
     ):
         with open(__file__.replace(os.path.basename(__file__), "")+f"../{my_dir}/topology.json") as f:
             self.topology = json.load(f)
@@ -40,14 +49,19 @@ class Bot:
         else:
             self.y = y
         self.gravity = gravity
+
         self.max_hp = max_hp
         self.hp = self.max_hp
+        self.critical_health = critical_health
         self.max_shield = max_shield
         self.shield = self.max_shield
+        self.critical_shield = critical_shield
+        self.happy_shield = happy_shield
+
         self.x_vel = xvel
         self.frame = 1
         self.time = 0
-        self.state = "idle"
+        self.state = "attack"
         self.status = "idle"
         self.move = move
         self.bg_info = bg_info
@@ -72,6 +86,42 @@ class Bot:
     def decide(self):
         "Decision to change one's status"
         pass
+
+    def p_a_r(self) -> float:
+        """Return the probability of changing from attack to retreat state.
+        Default equation: P(H) = ((A-H)/B)**2
+        P is the probability of changing from attack to retreat.
+        H is the shield.
+        A is the max shield
+        A-B is the critical shield
+        B is the max shield minus critical shield"""
+        if self.hp > self.critical_health:
+            return 0.
+
+        H = self.shield
+        A = self.max_shield
+        B = A - self.critical_shield
+        
+        if H < self.critical_shield:
+            return 0.95
+
+        return 0.95*(((A-H)/B)**2.)
+
+    def p_r_a(self) -> float:
+        """Return the probability of changing from retreat to attack state.
+        Default equation: P(H) = (H/(A-C))**2
+        H is the shield
+        A is the max shield
+        A-C is the happy sheild
+        C is the max shield minus happy shield"""
+        H = self.shield
+        A = self.max_shield
+        C = A - self.happy_shield
+
+        if H > self.happy_shield:
+            return 0.95
+
+        return 0.95((H/(A-C))**2.)
 
     def load_images(self, ext="png"):
         "Loaded once upon __init__"

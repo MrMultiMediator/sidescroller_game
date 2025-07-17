@@ -14,3 +14,6 @@ class Fighter(Bot):
             
         elif self.move == "left":
             self.x -= x_vel
+
+    def decide(self):
+        pass
