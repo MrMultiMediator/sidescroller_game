@@ -36,7 +36,7 @@ class Bot:
         bg_info,
         y=None,
         xvel=50,
-        move: str = "null",
+        direction: str = "null",
         max_hp=1000.,
         max_shield=1000.,
         critical_health=0.4,
@@ -69,7 +69,7 @@ class Bot:
         self.time = 0
         self.state = "attack"
         self.status = "idle"
-        self.move = move
+        self.direction = direction
         self.bg_info = bg_info
         self.my_dir = my_dir
         self.imfile = f"{self.my_dir}/{self.status}_{self.frame}.png"
