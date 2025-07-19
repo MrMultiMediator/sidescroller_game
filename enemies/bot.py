@@ -16,6 +16,12 @@ class Bot:
     character and the enemies, both shield and shield2. Shield2 is the active shield
     that only the player has. Shield is something that everyone has by default.
 
+    Introduce Attack States with Different Properties
+    Light Attack: Faster, less damage, perhaps safer.
+    Heavy Attack: Slower, more damage, potentially leaves the player more vulnerable
+      during its wind-up or recovery.
+    Special Attacks: Unique effects, perhaps requiring resources or cooldowns.
+
     critical_*: The probability of changing state from retreat to attack increases as
     the shield and health approach these thresholds. Below these, the probability goes
     to a high 95% and stays there.

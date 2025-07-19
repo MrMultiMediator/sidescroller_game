@@ -11,6 +11,11 @@ Attack script: Fighter with a gun with limited ammo. Will empty the clip if the 
 is out of striking range.
 
 
+Enemy type: grappler
+Attack script: Fighter with a grapple: attacks that pull the player in or disable them,
+requiring quick reactions or specific counter-inputs.
+
+
 Enemy type: lobber
 Attack script: Move towards the character until they're in range, then throw grenade.
 

@@ -36,6 +36,13 @@ class HealthBar:
 
 
 class Player(Sprite):
+    """
+    If shield2 goes to zero, the player will be stunned and vulnerable to attack temporarily.
+    
+    Perfect Guard/Parry: A very brief, well-timed shield could negate all damage,
+    perhaps even stun the enemy or open them up for a counterattack. This adds a
+    high-skill, high-reward mechanic.
+    """
     def __init__(self, window_width, window_height, bg_info, gravity, xvel=25):
         self.imgdir = "img/player"
         with open(__file__.replace(os.path.basename(__file__), "")+"/img/topology.json") as f:
