@@ -63,10 +63,12 @@ class Player(Sprite):
         self.health_bar = HealthBar(window_width, window_height, self.max_hp, self.max_shield)
         self.x_vel = xvel
         self.y_vel = 0.
+        self.shift = 0.
         self.frame = 1
         self.time = 0
         self.direction = 'right'
         self.status = 'idle'
+        self.previous = 'idle'
         self.bg_info = bg_info
         self.bg_edge = True # Specifies whether the character should move or the background should move
         self.imfile = f"{self.imgdir}/{self.status}_{self.frame}.png"
@@ -181,6 +183,11 @@ class Player(Sprite):
 
         if self.status != "fall1":
             self.update_health()
+
+        if self.previous != str(self.status):
+            self.apply_left_correction()
+
+        self.previous = str(self.status)
 
         return delta
 
@@ -331,4 +338,25 @@ class Player(Sprite):
         else:
             if self.frame > 1:
                 self.frame -= 1
+
+    def apply_left_correction(self):
+        self.still_coords['x'] -= self.shift
+        self.x -= self.shift
+        
+        if self.direction == "right":
+            self.shift = 0
+        if self.direction == "left":
+            if str(self.status) in self.topology["left_correction"].keys():
+                curr = self.topology["left_correction"][str(self.status)]
+                idle = self.topology["left_correction"]["idle"]
+        
+                if idle - curr < 0:
+                    self.shift = idle - curr
+                else:
+                    self.shift = 0
+            else:
+                self.shift = 0
+
+        self.still_coords['x'] += self.shift
+        self.x += self.shift
 
