@@ -1,4 +1,5 @@
 from pygame import image, Surface
+from random import random
 from pprint import pprint
 import json
 import os
@@ -122,7 +123,14 @@ class Bot:
 
     def decide(self):
         "Decision to change one's state"
-        pass
+        if self.state == "attack":
+            if random() <= self.p_a_r():
+                self.state = "retreat"
+                return
+
+        if self.state == "retreat":
+            if random() <= self.p_r_a():
+                self.state = "attack"
 
     def p_a_r(self) -> float:
         """Return the probability of changing from attack to retreat state.
