@@ -195,5 +195,29 @@
         "shoot1": 141,
         "kneel": 112,
         "kneel_punch1": 191
+    },
+    "atk_surf": {
+        "comment": "A list of statuses to include in the attack surface calculation for an enemy attacking this character.",
+        "jab1": 1,
+        "uppercut1": 2,
+        "kick1": 3,
+        "include": [
+            "kneel",
+            "jump",
+            "idle",
+            "jab1",
+            "uppercut1",
+            "kneel_punch1",
+            "kick1",
+            "shoot1",
+            "run",
+            "kneel_walk",
+            "walk"
+        ]
+    },
+    "filename_status_connector": {
+        "kneel1": "kneel",
+        "kneel_walk1": "kneel_walk",
+        "squat1": "jump"
     }
 }

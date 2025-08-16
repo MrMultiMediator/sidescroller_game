@@ -43,7 +43,8 @@ class Bot:
         critical_shield=0.2,
         happy_shield=0.65
     ):
-        with open(__file__.replace(os.path.basename(__file__), "")+f"../{my_dir}/topology.json") as f:
+        print(f"my_dir = {my_dir}")
+        with open(__file__.replace(os.path.basename(__file__), "")+f"../{my_dir}_topology.json") as f:
             self.topology = json.load(f)
         try:
             self.still_coords = {'y': bg_info['floor']-self.topology['bottom']['global']}
