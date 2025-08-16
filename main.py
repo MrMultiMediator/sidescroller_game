@@ -128,9 +128,10 @@ if __name__ == '__main__':
         #surf.blit(bg.surf, (bg.x,0))
 
         delta = player.update(bg)
+        player_info = player.get_info()
         bg.update(surf, delta)
         for enemy in enemies:
-            enemy.update(delta)
+            enemy.update(delta, player_info)
 
         update_screen(surf, bg, player, enemies)
 

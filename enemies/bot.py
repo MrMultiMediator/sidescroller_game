@@ -116,10 +116,10 @@ class Bot:
         the player updates."""
         self.x += window_xvel
 
+        self.time += 1
+
         if self.time > 10000000:
             self.time = 0
-
-        self.time += 1
 
     def decide(self):
         "Decision to change one's state"

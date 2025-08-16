@@ -360,3 +360,6 @@ class Player(Sprite):
         self.still_coords['x'] += self.shift
         self.x += self.shift
 
+    def get_info(self):
+        "Return info for enemies to know what I'm doing and my location."
+        return {"status": self.status, "x": self.x}
