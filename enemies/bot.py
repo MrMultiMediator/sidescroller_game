@@ -1,4 +1,5 @@
 from pygame import image, Surface
+from pprint import pprint
 import json
 import os
 
@@ -43,7 +44,6 @@ class Bot:
         critical_shield=0.2,
         happy_shield=0.65
     ):
-        print(f"my_dir = {my_dir}")
         with open(__file__.replace(os.path.basename(__file__), "")+f"../{my_dir}_topology.json") as f:
             self.topology = json.load(f)
         try:
@@ -77,6 +77,35 @@ class Bot:
         self.surf = image.load(self.imfile).convert_alpha()
         self.load_images()
 
+        if "atk_surf" in self.topology.keys():
+            self.compute_striking_distances()
+
+    def compute_striking_distances(self, verbosity="low"):
+        self.l_dist = {}
+        self.r_dist = {}
+        total_weight = {} # Should sum to 1
+
+        for status in self.topology["atk_surf"].keys():
+            self.l_dist[status] = 0.
+            self.r_dist[status] = 0.
+            total_weight[status] = 0.
+
+            # Initially, each player status/animation is weighted the same
+            weight_per_animation = 1./float(len(self.topology["atk_surf"][status]["values"].keys()))
+
+            for target_anim in self.topology["atk_surf"][status]["values"].keys():
+                weight_per_frame = 1./float(len(self.topology["atk_surf"][status]["values"][target_anim].keys()))
+                for frame in self.topology["atk_surf"][status]["values"][target_anim].keys():
+                    self.r_dist[status] += weight_per_animation*weight_per_frame*self.topology["atk_surf"][status]["values"][target_anim][frame]["right"]
+                    self.l_dist[status] += weight_per_animation*weight_per_frame*self.topology["atk_surf"][status]["values"][target_anim][frame]["left"]
+
+                    total_weight[status] += weight_per_animation*weight_per_frame
+
+        if verbosity == "high":
+            print(f"Right striking distance computed as {self.r_dist}")
+            print(f"Left striking distance computed as {self.l_dist}")
+            print(f"Total weight computed as {total_weight}")
+
     def update(self, window_xvel):
         """Everything that is not the main character (everything of this base class)
         needs to move relative to the main character. This update function needs to be
@@ -84,14 +113,15 @@ class Bot:
         center of the frame, and they need to be shifted over by that. This is the
         variable 'delta' returned by Player.update, i.e. this value is accessible after
         the player updates."""
-        self.time += 1
         self.x += window_xvel
 
         if self.time > 10000000:
             self.time = 0
 
+        self.time += 1
+
     def decide(self):
-        "Decision to change one's status"
+        "Decision to change one's state"
         pass
 
     def p_a_r(self) -> float:
@@ -128,7 +158,7 @@ class Bot:
         if H > self.happy_shield:
             return 0.95
 
-        return 0.95((H/(A-C))**2.)
+        return 0.95*((H/(A-C))**2.)
 
     def load_images(self, ext="png"):
         "Loaded once upon __init__"
