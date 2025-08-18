@@ -1,5 +1,7 @@
 from .bot import Bot
 from random import random
+import sys
+import os
 
 class Fighter(Bot):
     """
@@ -32,10 +34,18 @@ class Fighter(Bot):
         critical_health=0.4,
         critical_shield=0.2,
         happy_shield=0.65,
-        decision_frequency=10,
+        decision_frequency: int=10,
         confident_strike=0.85,
         uncertainty=10,
-        bias=0
+        bias=0,
+        atk_strengths: dict = {
+            "jab1": 5,
+            "kick1": 10,
+            "uppercut1": 5
+        },
+        strength=1.,
+        walk_vel=25,
+        run_vel=40
     ):
         super().__init__(
             x=x,
@@ -56,9 +66,22 @@ class Fighter(Bot):
         self.confident_strike = confident_strike
         self.uncertainty = uncertainty
         self.bias = bias
+        self.strength = strength
+
+        # Add various attack strengths to the atk_surface topology sub-dictionary
+        for key, value in atk_strengths.items():
+            self.topology["atk_surf"][key]["strength"] = value
+
+        self.walk_vel = walk_vel
+        self.run_vel = run_vel
 
     def update(self, window_xvel, player_info):
         super().update(window_xvel)
+
+        dist_from_player = self.compute_dist_from_player(player_info)
+
+        if self.time % self.decision_frequency == 0:
+            self.decide()
 
         if self.state == "attack":
             self.run_atk_script()
@@ -66,14 +89,22 @@ class Fighter(Bot):
         if self.state == "retreat":
             self.run_retreat_script()
 
+
+        if self.direction == "right" or self.direction == "left":
+            if self.shield > 2.*self.critical_health*self.max_shield:
+                self.status = "run"
+                self.shield -= self.max_shield*0.0025
+                self.x_vel = self.run_vel
+            else:
+                self.status = "walk"
+                self.x_vel = self.walk_vel
+
         if self.direction == "right":
-            self.x += x_vel
+            self.x += self.x_vel
             
         elif self.direction == "left":
-            self.x -= x_vel
+            self.x -= self.x_vel
 
-        if self.time % self.decision_frequency == 0:
-            self.decide()
 
     def decide(self):
         if self.state == "attack":
@@ -84,6 +115,10 @@ class Fighter(Bot):
         elif self.state == "retreat":
             if random() <= self.p_r_a():
                 self.state = "attack"
+
+    def compute_dist_from_player(self, player_info):
+        return self.x - player_info['x']
+
 
     def run_atk_script(self):
         pass
