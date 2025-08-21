@@ -1,3 +1,6 @@
+TODO: Incorporate left correction on enemy to prevent constant flipping
+
+
 At every frame, an enemy will have to decide whether to change their status, or remain in their
 current status. Then they will follow the script for that status.
 

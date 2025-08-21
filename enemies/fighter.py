@@ -78,8 +78,6 @@ class Fighter(Bot):
     def update(self, window_xvel, player_info):
         # TODO implement a safe stopping distance for an enemy in retreat, or at least a point
         #      where they switch to walking if they're far enough away.
-        # TODO add hysteresis to walk/run shield threshold
-        print(f"x = {self.x}")
         super().update(window_xvel)
         self.update_health()
         self.player_info = player_info
@@ -113,7 +111,6 @@ class Fighter(Bot):
                     self.status = "walk"
                     self.x_vel = self.walk_vel
 
-        print(f"x = {self.x}")
 
         if self.direction == "right":
             self.x += self.x_vel
@@ -121,8 +118,7 @@ class Fighter(Bot):
         elif self.direction == "left":
             self.x -= self.x_vel
 
-        print(f"x = {self.x}")
-        print('\n')
+        self.post_update()
 
     def update_health(self):
         # Every 1/10th of a second, recharge shields by 2%
