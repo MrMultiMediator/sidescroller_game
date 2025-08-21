@@ -34,7 +34,7 @@ class Fighter(Bot):
         critical_health=0.4,
         critical_shield=0.2,
         happy_shield=0.65,
-        decision_frequency: int=10,
+        decision_frequency: int=5,
         confident_strike=0.85,
         uncertainty=10,
         bias=0,
@@ -76,9 +76,15 @@ class Fighter(Bot):
         self.run_vel = run_vel
 
     def update(self, window_xvel, player_info):
+        # TODO implement a safe stopping distance for an enemy in retreat, or at least a point
+        #      where they switch to walking if they're far enough away.
+        # TODO add hysteresis to walk/run shield threshold
+        print(f"x = {self.x}")
         super().update(window_xvel)
+        self.update_health()
+        self.player_info = player_info
 
-        dist_from_player = self.compute_dist_from_player(player_info)
+        dist_from_player = self.compute_dist_from_player()
 
         if self.time % self.decision_frequency == 0:
             self.decide()
@@ -91,13 +97,23 @@ class Fighter(Bot):
 
 
         if self.direction == "right" or self.direction == "left":
-            if self.shield > 2.*self.critical_health*self.max_shield:
-                self.status = "run"
-                self.shield -= self.max_shield*0.0025
-                self.x_vel = self.run_vel
-            else:
+            if self.status != "walk" and self.status != "run":
                 self.status = "walk"
-                self.x_vel = self.walk_vel
+            if self.status == "walk":
+                if self.shield > 2.5*self.critical_shield*self.max_shield:
+                    print(f'running {self.shield}')
+                    self.status = "run"
+                    self.x_vel = self.run_vel
+
+            if self.status == "run":
+                self.shield -= self.max_shield*0.01
+
+                if self.shield < 1.25*self.critical_shield*self.max_shield:
+                    print(f'walking {self.shield}')
+                    self.status = "walk"
+                    self.x_vel = self.walk_vel
+
+        print(f"x = {self.x}")
 
         if self.direction == "right":
             self.x += self.x_vel
@@ -105,6 +121,17 @@ class Fighter(Bot):
         elif self.direction == "left":
             self.x -= self.x_vel
 
+        print(f"x = {self.x}")
+        print('\n')
+
+    def update_health(self):
+        # Every 1/10th of a second, recharge shields by 2%
+        if self.time % 3 == 0:
+            if self.shield < self.max_shield:
+                self.shield += self.max_shield*0.02
+
+            if self.shield > self.max_shield:
+                self.shield = self.max_shield
 
     def decide(self):
         if self.state == "attack":
@@ -116,12 +143,19 @@ class Fighter(Bot):
             if random() <= self.p_r_a():
                 self.state = "attack"
 
-    def compute_dist_from_player(self, player_info):
-        return self.x - player_info['x']
+    def compute_dist_from_player(self):
+        return self.x - self.player_info['x']
 
 
     def run_atk_script(self):
-        pass
+        if self.x >= self.player_info['x']:
+            self.direction = "left"
+        else:
+            self.direction = "right"
+        
 
     def run_retreat_script(self):
-        pass
+        if self.x >= self.player_info['x']:
+            self.direction = "right"
+        else:
+            self.direction = "left"
