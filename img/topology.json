@@ -1,43 +1,43 @@
 {
     "idle-running2": {
         "base_shift": [
-            -24,
+            -26,
             0
         ]
     },
     "idle-leaning1": {
         "base_shift": [
-            -42,
+            -46,
             0
         ]
     },
     "idle-start_running1": {
         "base_shift": [
-            -18,
+            -21,
             0
         ]
     },
     "idle-running1": {
         "base_shift": [
-            -31,
-            4
+            -37,
+            5
         ]
     },
     "idle-run": {
         "base_shift": [
-            -56,
-            4
+            -65,
+            5
         ]
     },
     "idle-walk": {
         "base_shift": [
-            -18,
+            -21,
             0
         ]
     },
     "idle-kneel1": {
         "base_shift": [
-            -27,
+            -31,
             0
         ]
     },
@@ -49,49 +49,49 @@
     },
     "idle-shoot1": {
         "base_shift": [
-            9,
+            10,
             0
         ]
     },
     "idle-jab1": {
         "base_shift": [
-            -10,
+            -12,
             0
         ]
     },
     "idle-kneel_walk1": {
         "base_shift": [
-            -43,
-            1
+            -49,
+            2
         ]
     },
     "idle-wind_up_punch1": {
         "base_shift": [
-            -21,
+            -24,
             0
         ]
     },
     "idle-kneel_punch1": {
         "base_shift": [
-            -34,
-            1
+            -40,
+            2
         ]
     },
     "idle-kick1": {
         "base_shift": [
-            -35,
+            -38,
             0
         ]
     },
     "idle-fall1": {
         "base_shift": [
-            -58,
-            -1
+            -68,
+            0
         ]
     },
     "idle-uppercut1": {
         "base_shift": [
-            -10,
+            -13,
             0
         ]
     },
@@ -99,67 +99,67 @@
         "kneel": {
             "method": "track",
             "values": [
-                184,
+                210,
+                208,
+                205,
+                195,
                 182,
-                178,
-                170,
-                158,
-                143
+                164
             ]
         },
         "kneel_punch1": {
             "method": "linear",
             "values": [
-                139,
-                139,
-                139,
-                139,
-                139,
-                139,
-                139,
-                139,
-                139
+                159,
+                159,
+                159,
+                159,
+                159,
+                159,
+                159,
+                159,
+                159
             ]
         },
         "kneel_walk": {
             "method": "const",
             "frame": 1,
             "values": [
-                139,
-                139,
-                139,
-                139,
-                139,
-                139,
-                139,
-                139,
-                139,
-                139,
-                139,
-                139,
-                139,
-                139,
-                139,
-                139,
-                139,
-                139,
-                139,
-                139
+                159,
+                159,
+                159,
+                159,
+                159,
+                159,
+                159,
+                159,
+                159,
+                159,
+                159,
+                159,
+                159,
+                159,
+                159,
+                159,
+                159,
+                159,
+                159,
+                159
             ]
         },
         "fall1": {
             "method": "linear",
             "values": [
-                185,
-                176,
-                167,
+                210,
+                199,
+                189,
+                179,
+                168,
                 158,
-                149,
-                140,
-                132
+                148
             ]
         },
-        "global": 184
+        "global": 210
     },
     "stop": {
         "kneel": "end",
@@ -173,12 +173,12 @@
         "jump": {
             "method": "track",
             "values": [
-                184,
-                178,
-                167,
-                150,
-                152,
-                154
+                210,
+                204,
+                190,
+                171,
+                173,
+                176
             ]
         }
     },
@@ -188,13 +188,13 @@
         }
     },
     "left_correction": {
-        "idle": 59,
-        "jab1": 160,
-        "kick1": 162,
-        "uppercut1": 130,
-        "shoot1": 141,
-        "kneel": 112,
-        "kneel_punch1": 191
+        "idle": 67,
+        "jab1": 180,
+        "kick1": 182,
+        "uppercut1": 147,
+        "shoot1": 158,
+        "kneel": 128,
+        "kneel_punch1": 216
     },
     "atk_surf": {
         "comment": "A list of statuses to include in the attack surface calculation for an enemy attacking this character.",
