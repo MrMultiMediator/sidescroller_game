@@ -129,8 +129,9 @@ class Bot:
         #if self.status != "fall1":
         #    self.update_health()
 
-        #if self.previous != str(self.status):
-        #    self.apply_left_correction()
+        if self.previous != str(self.status):
+            pass
+            # self.apply_left_correction()
 
         self.previous = str(self.status)
 
@@ -230,3 +231,25 @@ class Bot:
             for frame in range(img_js[animation]["frames"][0], img_js[animation]["frames"][1]+1):
                 filename = f"{self.my_dir}/{self.status_fname[animation]}_{frame}.{ext}"
                 self.surfaces[animation].append(image.load(filename).convert_alpha())
+
+
+    def apply_left_correction(self):
+        self.still_coords['x'] -= self.shift
+        self.x -= self.shift
+        
+        if self.direction == "right":
+            self.shift = 0
+        if self.direction == "left":
+            if str(self.status) in self.topology["left_correction"].keys():
+                curr = self.topology["left_correction"][str(self.status)]
+                idle = self.topology["left_correction"]["idle"]
+        
+                if idle - curr < 0:
+                    self.shift = idle - curr
+                else:
+                    self.shift = 0
+            else:
+                self.shift = 0
+
+        self.still_coords['x'] += self.shift
+        self.x += self.shift

@@ -94,7 +94,7 @@ class Fighter(Bot):
             self.run_retreat_script()
 
 
-        if self.direction == "right" or self.direction == "left":
+        if self.direction == "right" or self.direction == "left" and (self.x >= self.player_info['x'] + 0.6*self.x_vel or self.x <= self.player_info['x'] - 0.6*self.x_vel):
             if self.status != "walk" and self.status != "run":
                 self.status = "walk"
             if self.status == "walk":
@@ -112,11 +112,11 @@ class Fighter(Bot):
                     self.x_vel = self.walk_vel
 
 
-        if self.direction == "right":
-            self.x += self.x_vel
-            
-        elif self.direction == "left":
-            self.x -= self.x_vel
+            if self.direction == "right":
+                self.x += self.x_vel
+                
+            elif self.direction == "left":
+                self.x -= self.x_vel
 
         self.post_update()
 
