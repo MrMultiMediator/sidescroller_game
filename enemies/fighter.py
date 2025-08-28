@@ -74,6 +74,7 @@ class Fighter(Bot):
 
         self.walk_vel = walk_vel
         self.run_vel = run_vel
+        self.damage = {'jab1': 15, 'uppercut1': 5, 'kick1': 25}
 
     def update(self, window_xvel, player_info):
         # TODO implement a safe stopping distance for an enemy in retreat, or at least a point
@@ -146,9 +147,12 @@ class Fighter(Bot):
     def run_atk_script(self):
         if self.x >= self.player_info['x']:
             self.direction = "left"
+            #print(self.l_dist) # Striking distance dict from left w/ keys being attacks and values distances.
         else:
             self.direction = "right"
-        
+            #print(self.r_dist)
+
+        # TODO determine which attacks are in range and randomly sample from those to decide your attack
 
     def run_retreat_script(self):
         if self.x >= self.player_info['x']:
