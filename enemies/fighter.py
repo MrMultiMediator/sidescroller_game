@@ -1,7 +1,8 @@
 from .bot import Bot
-from random import random
+from random import random, choice
 import sys
 import os
+from numpy.random import normal
 
 class Fighter(Bot):
     """
@@ -88,16 +89,17 @@ class Fighter(Bot):
         if self.time % self.decision_frequency == 0:
             self.decide()
 
-        if self.state == "attack":
+        if self.state == "attack" and self.status not in self.damage.keys():
             self.run_atk_script()
 
         if self.state == "retreat":
             self.run_retreat_script()
 
 
-        if self.direction == "right" or self.direction == "left" and (self.x >= self.player_info['x'] + 0.6*self.x_vel or self.x <= self.player_info['x'] - 0.6*self.x_vel):
+        if self.direction == "right" or self.direction == "left" and self.status not in self.damage.keys() and (self.x >= self.player_info['x'] + 0.75*self.x_vel or self.x <= self.player_info['x'] - 0.75*self.x_vel):
             if self.status != "walk" and self.status != "run":
                 self.status = "walk"
+                self.frame = 1
             if self.status == "walk":
                 if self.shield > 2.5*self.critical_shield*self.max_shield:
                     print(f'running {self.shield}')
@@ -112,14 +114,22 @@ class Fighter(Bot):
                     self.status = "walk"
                     self.x_vel = self.walk_vel
 
+        elif self.status == "walk" or self.status == "run":
+            self.frame = 1
+            self.status = "idle"
 
+
+        if self.status == "walk" or self.status == "run":
             if self.direction == "right":
                 self.x += self.x_vel
                 
             elif self.direction == "left":
                 self.x -= self.x_vel
 
+        print(self.status)
         self.post_update()
+        print(self.status)
+        print('\n')
 
     def update_health(self):
         # Every 1/10th of a second, recharge shields by 2%
@@ -143,6 +153,27 @@ class Fighter(Bot):
     def compute_dist_from_player(self):
         return self.x - self.player_info['x']
 
+    def attacks_in_range(self):
+        atks_in_range = []
+
+        for atk in self.damage.keys():
+            if self.direction == "right":
+                if abs(self.x - self.player_info['x']) < self.r_dist[atk]*self.confident_strike:
+                    atks_in_range.append(atk)
+
+            if self.direction == "left":
+                if abs(self.x - self.player_info['x']) < self.l_dist[atk]*self.confident_strike:
+                    atks_in_range.append(atk)
+
+        return atks_in_range
+
+    def distance_estimate(self, atk):
+        """This function emulates that enemies are not all-knowing and computes an
+        'estimate' of the distance to the player using the uncertainty and bias."""
+        return self.bias + normal(
+            loc=abs(self.x - self.player_info['x']),
+            scale=self.uncertainty
+        )
 
     def run_atk_script(self):
         if self.x >= self.player_info['x']:
@@ -151,6 +182,21 @@ class Fighter(Bot):
         else:
             self.direction = "right"
             #print(self.r_dist)
+
+        atks_in_range = self.attacks_in_range()
+        if len(atks_in_range) > 0:
+            atk = choice(atks_in_range)
+
+            # Compute estimated distance for the attack to decide if we want to do it
+            if self.direction == "right":
+                distance_goal = abs(self.confident_strike*self.r_dist[atk])
+            elif self.direction == "left":
+                distance_goal = abs(self.confident_strike*self.l_dist[atk])
+
+            if self.distance_estimate(atk) < distance_goal:
+                self.frame = 1
+                self.status = atk
+                print(f"Striking player with attack {atk}")
 
         # TODO determine which attacks are in range and randomly sample from those to decide your attack
 

@@ -140,7 +140,9 @@ class Bot:
             self.frame += 1
 
             if self.frame > len(self.surfaces[str(self.status)]):
+                print('setting frame to 1')
                 self.frame = 1
+                # self.status = "idle"
 
         elif str(self.status) == "jump":
             self.jump_frame_control()
@@ -152,11 +154,14 @@ class Bot:
                 self.frame += 1
 
             if self.topology["stop"][str(self.status)] == "beginning":
+                self.frame += 1
                 if self.frame == len(self.surfaces[str(self.status)]):
+                    print('setting frame to 1 adlfkjds')
                     self.frame = 1
-                    self.status.status = "done"
-                elif self.status.status == "running":
-                    self.frame += 1
+                    #self.status.status = "done"
+                    self.status = "idle"
+                #elif self.status.status == "running":
+                #    self.frame += 1
 
         #print(f"Frame is {self.frame} : {str(self.status)} : {self.keys_down}")
 
