@@ -46,7 +46,7 @@ class Fighter(Bot):
         },
         strength=1.,
         walk_vel=25,
-        run_vel=40
+        run_vel=32
     ):
         super().__init__(
             x=x,
@@ -126,10 +126,7 @@ class Fighter(Bot):
             elif self.direction == "left":
                 self.x -= self.x_vel
 
-        print(self.status)
         self.post_update()
-        print(self.status)
-        print('\n')
 
     def update_health(self):
         # Every 1/10th of a second, recharge shields by 2%

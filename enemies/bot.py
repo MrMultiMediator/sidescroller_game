@@ -81,12 +81,44 @@ class Bot:
         self.load_images()
 
         if "atk_surf" in self.topology.keys():
+            self.prune_atk_surf(verbosity="high")
             self.compute_striking_distances()
 
-    def compute_striking_distances(self, verbosity="low"):
+    def exclusion_msg(self, status, target_anim, frame, direction):
+        msg = f"Omitting enemy attack {status} facing {direction} against player "
+        msg += f"{target_anim} frame {frame} from striking distance computation due to"
+        msg += " exclusion specifier."
+
+        return msg
+
+    def prune_atk_surf(self, verbosity="low"):
+        """Remove from the dict, attack distances where there is no numerical value,
+        and instead an 'exclude' string due to issues with the automated computation.
+        """
+        for status in self.topology["atk_surf"].keys():
+            for target_anim in self.topology["atk_surf"][status]["values"].keys():
+                for frame in self.topology["atk_surf"][status]["values"][target_anim].keys():
+                    r_atk_dist = self.topology["atk_surf"][status]["values"][target_anim][frame]["right"]
+                    l_atk_dist = self.topology["atk_surf"][status]["values"][target_anim][frame]["left"]
+
+                    if isinstance(r_atk_dist, str):
+                        if verbosity == "high":
+                            print(self.exclusion_msg(status, target_anim, frame, "right"))
+                        del self.topology["atk_surf"][status]["values"][target_anim][frame]["right"]
+
+                    if isinstance(l_atk_dist, str):
+                        if verbosity == "high":
+                            print(self.exclusion_msg(status, target_anim, frame, "left"))
+                        del self.topology["atk_surf"][status]["values"][target_anim][frame]["left"]
+
+    def compute_striking_distances(self, verbosity="high"):
+        """Exclude from the calculation, attack distances where there is no numerical 
+        value, and instead an 'exclude' string due to issues with the automated 
+        computation, and where the key-value pair was previously deleted from the 
+        topology in the call to self.prune_atk_surf()"""
         self.l_dist = {}
         self.r_dist = {}
-        total_weight = {} # Should sum to 1
+        total_weight = {} # Should sum to 1. Now it won't because of the sketchy way of excluding certain frames.
 
         for status in self.topology["atk_surf"].keys():
             self.l_dist[status] = 0.
@@ -99,8 +131,11 @@ class Bot:
             for target_anim in self.topology["atk_surf"][status]["values"].keys():
                 weight_per_frame = 1./float(len(self.topology["atk_surf"][status]["values"][target_anim].keys()))
                 for frame in self.topology["atk_surf"][status]["values"][target_anim].keys():
-                    self.r_dist[status] += weight_per_animation*weight_per_frame*self.topology["atk_surf"][status]["values"][target_anim][frame]["right"]
-                    self.l_dist[status] += weight_per_animation*weight_per_frame*self.topology["atk_surf"][status]["values"][target_anim][frame]["left"]
+                    try:
+                        self.r_dist[status] += weight_per_animation*weight_per_frame*self.topology["atk_surf"][status]["values"][target_anim][frame]["right"]
+                        self.l_dist[status] += weight_per_animation*weight_per_frame*self.topology["atk_surf"][status]["values"][target_anim][frame]["left"]
+                    except KeyError:
+                        continue
 
                     total_weight[status] += weight_per_animation*weight_per_frame
 
