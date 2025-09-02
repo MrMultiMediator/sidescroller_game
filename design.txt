@@ -1,4 +1,5 @@
 TODO: Incorporate left correction on enemy to prevent constant flipping
+TODO: Make enemies' attacks do damage to the player
 
 
 At every frame, an enemy will have to decide whether to change their status, or remain in their
