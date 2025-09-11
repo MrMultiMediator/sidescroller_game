@@ -76,6 +76,7 @@ class Fighter(Bot):
         self.walk_vel = walk_vel
         self.run_vel = run_vel
         self.damage = {'jab1': 15, 'uppercut1': 5, 'kick1': 25}
+        self.attack_has_dealt_damage = False
 
     def update(self, window_xvel, player_info):
         # TODO implement a safe stopping distance for an enemy in retreat, or at least a point
@@ -193,7 +194,23 @@ class Fighter(Bot):
             if self.distance_estimate(atk) < distance_goal:
                 self.frame = 1
                 self.status = atk
+                self.attack_has_dealt_damage = False
                 print(f"Striking player with attack {atk}")
+
+    def take_damage(self, amount):
+        if self.shield > 0:
+            if self.shield >= amount:
+                self.shield -= amount
+            else:
+                amount -= self.shield
+                self.shield = 0
+                self.hp -= amount
+        else:
+            self.hp -= amount
+
+        if self.hp <= 0:
+            self.hp = 0
+            self.status = "fall1"
 
         # TODO determine which attacks are in range and randomly sample from those to decide your attack
 

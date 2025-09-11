@@ -133,6 +133,24 @@ if __name__ == '__main__':
         for enemy in enemies:
             enemy.update(delta, player_info)
 
+        # --- Collision and Damage Logic ---
+        player_rect = player.surf.get_rect(topleft=(player.x, player.y))
+        for enemy in enemies:
+            enemy_rect = enemy.surf.get_rect(topleft=(enemy.x, enemy.y))
+
+            if player_rect.colliderect(enemy_rect):
+                # Player attacks enemy
+                if player.status in player.damage and not player.attack_has_dealt_damage:
+                    enemy.take_damage(player.damage[str(player.status)])
+                    player.attack_has_dealt_damage = True
+                    print(f"Player hit {type(enemy).__name__} with {player.status}")
+
+                # Enemy attacks player
+                if enemy.status in enemy.damage and not enemy.attack_has_dealt_damage:
+                    player.take_damage(enemy.damage[str(enemy.status)])
+                    enemy.attack_has_dealt_damage = True
+                    print(f"{type(enemy).__name__} hit player with {enemy.status}")
+
         update_screen(surf, bg, player, enemies)
 
         disp.blit(surf, (0,0))
