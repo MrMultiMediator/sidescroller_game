@@ -134,22 +134,25 @@ if __name__ == '__main__':
             enemy.update(delta, player_info)
 
         # --- Collision and Damage Logic ---
-        player_rect = player.surf.get_rect(topleft=(player.x, player.y))
-        for enemy in enemies:
-            enemy_rect = enemy.surf.get_rect(topleft=(enemy.x, enemy.y))
+        p_mask = pygame.mask.from_surface(player.surf)
+        for e_index, enemy in enumerate(enemies):
+            e_mask = pygame.mask.from_surface(enemy.surf)
 
-            if player_rect.colliderect(enemy_rect):
+            offset_x = player.x - enemy.x
+            offset_y = player.y - enemy.y
+
+            if e_mask.overlap(p_mask, (offset_x, offset_y)):
                 # Player attacks enemy
-                if player.status in player.damage and not player.attack_has_dealt_damage:
+                if player.status in player.damage and not player.attack_has_dealt_damage[enemy.name]:
                     enemy.take_damage(player.damage[str(player.status)])
-                    player.attack_has_dealt_damage = True
+                    player.attack_has_dealt_damage[enemy.name] = True
                     print(f"Player hit {type(enemy).__name__} with {player.status}")
 
                 # Enemy attacks player
                 if enemy.status in enemy.damage and not enemy.attack_has_dealt_damage:
                     player.take_damage(enemy.damage[str(enemy.status)])
                     enemy.attack_has_dealt_damage = True
-                    print(f"{type(enemy).__name__} hit player with {enemy.status}")
+                    print(f"{type(enemy).__name__} {e_index} hit player with {enemy.status}")
 
         update_screen(surf, bg, player, enemies)
 

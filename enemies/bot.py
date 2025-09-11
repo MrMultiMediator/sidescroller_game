@@ -2,6 +2,7 @@ from pygame import image, Surface
 from pygame.transform import flip
 from random import random
 from pprint import pprint
+from uuid import uuid4
 import json
 import os
 
@@ -33,6 +34,7 @@ class Bot:
     """
     def __init__(
         self,
+        name,
         x,
         gravity,
         my_dir,
@@ -46,6 +48,8 @@ class Bot:
         critical_shield=0.2,
         happy_shield=0.65
     ):
+        self.name = str(uuid4())
+        
         with open(__file__.replace(os.path.basename(__file__), "")+f"../{my_dir}_topology.json") as f:
             self.topology = json.load(f)
         try:
@@ -175,7 +179,7 @@ class Bot:
             self.frame += 1
 
             if self.frame > len(self.surfaces[str(self.status)]):
-                print('setting frame to 1')
+                # print('setting frame to 1')
                 self.frame = 1
                 # self.status = "idle"
 
@@ -191,7 +195,7 @@ class Bot:
             if self.topology["stop"][str(self.status)] == "beginning":
                 self.frame += 1
                 if self.frame == len(self.surfaces[str(self.status)]):
-                    print('setting frame to 1 adlfkjds')
+                    #print('setting frame to 1 adlfkjds')
                     self.frame = 1
                     #self.status.status = "done"
                     self.status = "idle"

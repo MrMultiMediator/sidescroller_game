@@ -23,6 +23,7 @@ class Fighter(Bot):
     """
     def __init__(
         self,
+        name,
         x,
         gravity,
         my_dir,
@@ -49,6 +50,7 @@ class Fighter(Bot):
         run_vel=32
     ):
         super().__init__(
+            name=name,
             x=x,
             gravity=gravity,
             my_dir=my_dir,
@@ -75,7 +77,7 @@ class Fighter(Bot):
 
         self.walk_vel = walk_vel
         self.run_vel = run_vel
-        self.damage = {'jab1': 15, 'uppercut1': 5, 'kick1': 25}
+        self.damage = {'jab1': 45, 'uppercut1': 15, 'kick1': 65}
         self.attack_has_dealt_damage = False
 
     def update(self, window_xvel, player_info):
@@ -103,7 +105,6 @@ class Fighter(Bot):
                 self.frame = 1
             if self.status == "walk":
                 if self.shield > 2.5*self.critical_shield*self.max_shield:
-                    print(f'running {self.shield}')
                     self.status = "run"
                     self.x_vel = self.run_vel
 
@@ -111,7 +112,6 @@ class Fighter(Bot):
                 self.shield -= self.max_shield*0.01
 
                 if self.shield < 1.25*self.critical_shield*self.max_shield:
-                    print(f'walking {self.shield}')
                     self.status = "walk"
                     self.x_vel = self.walk_vel
 
@@ -195,7 +195,7 @@ class Fighter(Bot):
                 self.frame = 1
                 self.status = atk
                 self.attack_has_dealt_damage = False
-                print(f"Striking player with attack {atk}")
+                #print(f"Striking player with attack {atk}")
 
     def take_damage(self, amount):
         if self.shield > 0:
