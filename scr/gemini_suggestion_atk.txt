@@ -1,0 +1,35 @@
+Of course. This is a classic problem in action game development. Here is a high-level approach to ensure an attack only deals damage once per animation:
+
+### Core Concept: Attack State Flags
+
+The general idea is to give each character (both the player and the enemy) a state variable, or "flag," that tracks whether their current attack has already landed a hit.
+
+Here’s how you can implement it:
+
+1.  **Add a "Damage Dealt" Flag:**
+    *   In your `Player` and `Fighter` classes, add a new boolean attribute like `self.attack_has_dealt_damage`.
+    *   Initialize this flag to `False`.
+
+2.  **Manage the Flag During an Attack:**
+    *   **Reset the flag:** When an attack animation *begins*, you must set this flag to `False`. This "arms" the attack, making it capable of dealing damage.
+    *   **Check the flag on collision:** In your game loop, when you detect a collision between the attacker's hitbox and the target:
+        *   First, check if the `attack_has_dealt_damage` flag is `False`.
+        *   If it is `False`, apply the damage to the target and **immediately** set the flag to `True`.
+        *   If the flag is already `True`, it means this attack has already hit, so you do nothing.
+    *   **Reset after the attack:** When the attack animation *finishes*, you should ensure the flag is reset to `False` so the *next* attack can deal damage again.
+
+### Alternative for Multi-Target Attacks
+
+If you plan for attacks that can hit multiple targets (e.g., a wide sword swing hitting two enemies), a simple boolean flag isn't enough. In that case, a slightly more advanced approach is better:
+
+1.  **Use a "Hit List":**
+    *   Instead of a boolean, give the attacker an attribute that is a list, like `self.entities_hit_this_attack`.
+    *   When an attack animation *begins*, clear this list: `self.entities_hit_this_attack = []`.
+    *   When a collision with a target is detected, check if the target is already in the `entities_hit_this_attack` list.
+    *   If the target is **not** in the list, apply damage and add the target to the list.
+    *   If the target is already in the list, do nothing.
+    *   When the attack animation ends, clear the list again.
+
+This ensures that each attack can only damage any given target one time, but can still hit multiple different targets during its animation.
+
+Both of these methods will solve the problem for both player-to-enemy and enemy-to-player damage. You just need to implement the chosen logic for all attacking entities.
