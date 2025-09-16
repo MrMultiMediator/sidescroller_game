@@ -34,11 +34,11 @@ class Bot:
     """
     def __init__(
         self,
-        name,
         x,
         gravity,
         my_dir,
         bg_info,
+        name=None,
         y=None,
         xvel=50,
         direction: str = "null",
@@ -48,8 +48,9 @@ class Bot:
         critical_shield=0.2,
         happy_shield=0.65
     ):
-        self.name = str(uuid4())
-        
+        if name == None:
+            self.name = str(uuid4())
+
         with open(__file__.replace(os.path.basename(__file__), "")+f"../{my_dir}_topology.json") as f:
             self.topology = json.load(f)
         try:
@@ -240,6 +241,7 @@ class Bot:
         if H < self.critical_shield:
             return 0.95
 
+        print(f"Retreat probability = {0.95*(((A-H)/B)**2.)}, shield = {self.shield}")
         return 0.95*(((A-H)/B)**2.)
 
     def p_r_a(self) -> float:

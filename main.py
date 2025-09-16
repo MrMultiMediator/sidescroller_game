@@ -48,8 +48,15 @@ if __name__ == '__main__':
     player = Player(window.width, window.height, bg.info, gravity, xvel=xvel)
 
     enemies = [
-        Fighter(1700, player.gravity, "img/enemies/e1", bg.info)
+        Fighter(700, player.gravity, "img/enemies/e1", bg.info),
+        Fighter(1700, player.gravity, "img/enemies/e1", bg.info),
+        Fighter(2700, player.gravity, "img/enemies/e1", bg.info),
+        Fighter(3700, player.gravity, "img/enemies/e1", bg.info),
+        Fighter(4700, player.gravity, "img/enemies/e1", bg.info)
     ]
+
+    for enemy in enemies:
+        player.new_enemy(enemy)
 
     while not terminate_game_loop:
         clock.tick(30)
@@ -143,16 +150,18 @@ if __name__ == '__main__':
 
             if e_mask.overlap(p_mask, (offset_x, offset_y)):
                 # Player attacks enemy
-                if player.status in player.damage and not player.attack_has_dealt_damage[enemy.name]:
+                if str(player.status) in player.damage.keys() and not player.attack_has_dealt_damage[enemy.name]:
                     enemy.take_damage(player.damage[str(player.status)])
                     player.attack_has_dealt_damage[enemy.name] = True
-                    print(f"Player hit {type(enemy).__name__} with {player.status}")
+                    #print(f"Player hit {type(enemy).__name__} with {player.status}, shield = {enemy.shield}, hp = {enemy.hp}")
 
                 # Enemy attacks player
                 if enemy.status in enemy.damage and not enemy.attack_has_dealt_damage:
                     player.take_damage(enemy.damage[str(enemy.status)])
                     enemy.attack_has_dealt_damage = True
-                    print(f"{type(enemy).__name__} {e_index} hit player with {enemy.status}")
+
+                    #print(f"{enemy.hp}, {enemy.shield}, {player.status in player.damage.keys()}, {not player.attack_has_dealt_damage[enemy.name]}")
+                    #print(f"{type(enemy).__name__} {e_index} hit player with {enemy.status}")
 
         update_screen(surf, bg, player, enemies)
 

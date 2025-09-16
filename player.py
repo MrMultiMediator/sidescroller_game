@@ -190,7 +190,11 @@ class Player(Sprite):
         if self.previous != str(self.status):
             self.apply_left_correction()
 
-        self.previous = str(self.status)
+        if self.previous != str(self.status):
+            for enemy_name in self.attack_has_dealt_damage.keys():
+                self.attack_has_dealt_damage[enemy_name] = False
+                
+            self.previous = str(self.status)
 
         return delta
 
@@ -366,3 +370,6 @@ class Player(Sprite):
     def get_info(self):
         "Return info for enemies to know what I'm doing and my location."
         return {"status": self.status, "x": self.x}
+
+    def new_enemy(self, enemy):
+        self.attack_has_dealt_damage[enemy.name] = False
