@@ -34,9 +34,9 @@ class Fighter(Bot):
         max_hp=100.,
         max_shield=100.,
         critical_health=0.4,
-        critical_shield=0.2,
+        critical_shield=0.4,
         happy_shield=0.65,
-        decision_frequency: int=45,
+        decision_frequency: int=1,
         confident_strike=0.85,
         uncertainty=10,
         bias=0,
@@ -84,6 +84,11 @@ class Fighter(Bot):
         # TODO implement a safe stopping distance for an enemy in retreat, or at least a point
         #      where they switch to walking if they're far enough away.
         super().update(window_xvel)
+
+        if self.status == "fall1":
+            self.post_update()
+            return
+
         self.update_health()
         self.player_info = player_info
 
@@ -106,6 +111,7 @@ class Fighter(Bot):
             if self.status == "walk":
                 if self.shield > 2.5*self.critical_shield*self.max_shield:
                     self.status = "run"
+                    self.frame = 1
                     self.x_vel = self.run_vel
 
             if self.status == "run":
@@ -113,6 +119,7 @@ class Fighter(Bot):
 
                 if self.shield < 1.25*self.critical_shield*self.max_shield:
                     self.status = "walk"
+                    self.frame = 1
                     self.x_vel = self.walk_vel
 
         elif self.status == "walk" or self.status == "run":
@@ -141,8 +148,11 @@ class Fighter(Bot):
     def decide(self):
         if self.state == "attack":
             if random() <= self.p_a_r():
+                print("retreting")
                 self.state = "retreat"
                 return
+            else:
+                print(f'not retreting {random()} <= {self.p_a_r()}')
 
         elif self.state == "retreat":
             if random() <= self.p_r_a():
@@ -208,8 +218,9 @@ class Fighter(Bot):
         else:
             self.hp -= amount
 
-        if self.hp <= 0:
+        if self.hp <= 0 and self.status != "fall1":
             self.hp = 0
+            self.frame = 1
             self.status = "fall1"
 
         # TODO determine which attacks are in range and randomly sample from those to decide your attack

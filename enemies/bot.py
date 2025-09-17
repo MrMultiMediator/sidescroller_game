@@ -231,14 +231,15 @@ class Bot:
         A is the max shield
         A-B is the critical shield
         B is the max shield minus critical shield"""
-        if self.hp > self.critical_health:
+        if self.hp > self.critical_health*self.max_hp:
             return 0.
 
         H = self.shield
         A = self.max_shield
-        B = A - self.critical_shield
+        B = A - self.critical_shield*self.max_shield
         
         if H < self.critical_shield:
+            print(f"Retreat probability = 0.95")
             return 0.95
 
         print(f"Retreat probability = {0.95*(((A-H)/B)**2.)}, shield = {self.shield}")
