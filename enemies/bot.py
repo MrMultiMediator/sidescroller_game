@@ -239,10 +239,8 @@ class Bot:
         B = A - self.critical_shield*self.max_shield
         
         if H < self.critical_shield:
-            print(f"Retreat probability = 0.95")
             return 0.95
 
-        print(f"Retreat probability = {0.95*(((A-H)/B)**2.)}, shield = {self.shield}")
         return 0.95*(((A-H)/B)**2.)
 
     def p_r_a(self) -> float:
@@ -300,3 +298,14 @@ class Bot:
 
         self.still_coords['x'] += self.shift
         self.x += self.shift
+
+
+    def adjust_y_to_bottom(self):
+        """If the current status specifies that the y-position of the character needs
+        to change due to a changing bottom location then adjust according to the
+        specifications of the character status"""
+        if str(self.status) in self.topology["bottom"].keys():
+            try:
+                self.y = self.bg_info['floor']-self.topology['bottom'][str(self.status)]['values'][self.frame-1]
+            except Exception as e:
+                pass

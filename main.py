@@ -153,7 +153,7 @@ if __name__ == '__main__':
                 if str(player.status) in player.damage.keys() and not player.attack_has_dealt_damage[enemy.name]:
                     enemy.take_damage(player.damage[str(player.status)])
                     player.attack_has_dealt_damage[enemy.name] = True
-                    print(f"Player hit {type(enemy).__name__}_{e_index} with {player.status}, shield = {enemy.shield}, hp = {enemy.hp}")
+                    #print(f"Player hit {type(enemy).__name__}_{e_index} with {player.status}, shield = {enemy.shield}, hp = {enemy.hp}")
 
                 # Enemy attacks player
                 if enemy.status in enemy.damage and not enemy.attack_has_dealt_damage:

@@ -36,7 +36,7 @@ class Fighter(Bot):
         critical_health=0.4,
         critical_shield=0.4,
         happy_shield=0.65,
-        decision_frequency: int=1,
+        decision_frequency: int=10,
         confident_strike=0.85,
         uncertainty=10,
         bias=0,
@@ -86,6 +86,7 @@ class Fighter(Bot):
         super().update(window_xvel)
 
         if self.status == "fall1":
+            self.adjust_y_to_bottom()
             self.post_update()
             return
 
@@ -134,6 +135,7 @@ class Fighter(Bot):
             elif self.direction == "left":
                 self.x -= self.x_vel
 
+        self.adjust_y_to_bottom()
         self.post_update()
 
     def update_health(self):
@@ -148,11 +150,8 @@ class Fighter(Bot):
     def decide(self):
         if self.state == "attack":
             if random() <= self.p_a_r():
-                print("retreting")
                 self.state = "retreat"
                 return
-            else:
-                print(f'not retreting {random()} <= {self.p_a_r()}')
 
         elif self.state == "retreat":
             if random() <= self.p_r_a():
