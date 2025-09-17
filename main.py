@@ -49,10 +49,15 @@ if __name__ == '__main__':
 
     enemies = [
         Fighter(700, player.gravity, "img/enemies/e1", bg.info),
+        Fighter(1200, player.gravity, "img/enemies/e1", bg.info),
         Fighter(1700, player.gravity, "img/enemies/e1", bg.info),
+        Fighter(2200, player.gravity, "img/enemies/e1", bg.info),
         Fighter(2700, player.gravity, "img/enemies/e1", bg.info),
+        Fighter(3200, player.gravity, "img/enemies/e1", bg.info),
         Fighter(3700, player.gravity, "img/enemies/e1", bg.info),
-        Fighter(4700, player.gravity, "img/enemies/e1", bg.info)
+        Fighter(4200, player.gravity, "img/enemies/e1", bg.info),
+        Fighter(4700, player.gravity, "img/enemies/e1", bg.info),
+        Fighter(5200, player.gravity, "img/enemies/e1", bg.info)
     ]
 
     for enemy in enemies:
