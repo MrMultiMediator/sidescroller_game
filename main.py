@@ -48,8 +48,20 @@ if __name__ == '__main__':
     player = Player(window.width, window.height, bg.info, gravity, xvel=xvel)
 
     enemies = [
-        Fighter(1700, player.gravity, "img/enemies/e1", bg.info)
+        Fighter(700, player.gravity, "img/enemies/e1", bg.info),
+        Fighter(1200, player.gravity, "img/enemies/e1", bg.info),
+        Fighter(1700, player.gravity, "img/enemies/e1", bg.info),
+        Fighter(2200, player.gravity, "img/enemies/e1", bg.info),
+        Fighter(2700, player.gravity, "img/enemies/e1", bg.info),
+        Fighter(3200, player.gravity, "img/enemies/e1", bg.info),
+        Fighter(3700, player.gravity, "img/enemies/e1", bg.info),
+        Fighter(4200, player.gravity, "img/enemies/e1", bg.info),
+        Fighter(4700, player.gravity, "img/enemies/e1", bg.info),
+        Fighter(5200, player.gravity, "img/enemies/e1", bg.info)
     ]
+
+    for enemy in enemies:
+        player.new_enemy(enemy)
 
     while not terminate_game_loop:
         clock.tick(30)
@@ -132,6 +144,29 @@ if __name__ == '__main__':
         bg.update(surf, delta)
         for enemy in enemies:
             enemy.update(delta, player_info)
+
+        # --- Collision and Damage Logic ---
+        p_mask = pygame.mask.from_surface(player.surf)
+        for e_index, enemy in enumerate(enemies):
+            e_mask = pygame.mask.from_surface(enemy.surf)
+
+            offset_x = player.x - enemy.x
+            offset_y = player.y - enemy.y
+
+            if e_mask.overlap(p_mask, (offset_x, offset_y)):
+                # Player attacks enemy
+                if str(player.status) in player.damage.keys() and not player.attack_has_dealt_damage[enemy.name]:
+                    enemy.take_damage(player.damage[str(player.status)])
+                    player.attack_has_dealt_damage[enemy.name] = True
+                    #print(f"Player hit {type(enemy).__name__}_{e_index} with {player.status}, shield = {enemy.shield}, hp = {enemy.hp}")
+
+                # Enemy attacks player
+                if enemy.status in enemy.damage and not enemy.attack_has_dealt_damage:
+                    player.take_damage(enemy.damage[str(enemy.status)])
+                    enemy.attack_has_dealt_damage = True
+
+                    #print(f"{enemy.hp}, {enemy.shield}, {player.status in player.damage.keys()}, {not player.attack_has_dealt_damage[enemy.name]}")
+                    #print(f"{type(enemy).__name__} {e_index} hit player with {enemy.status}")
 
         update_screen(surf, bg, player, enemies)
 

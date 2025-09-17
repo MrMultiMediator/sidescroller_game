@@ -74,6 +74,8 @@ class Player(Sprite):
         self.imfile = f"{self.imgdir}/{self.status}_{self.frame}.png"
         self.surf = image.load(self.imfile).convert_alpha()
         self.keys_down = []
+        self.attack_has_dealt_damage = {}
+        self.damage = {"jab1": 20, "kick1": 35, "uppercut1": 25, "kneel_punch1": 15, "shoot1": 50}
         self.load_images()
 
 
@@ -153,6 +155,7 @@ class Player(Sprite):
             self.take_damage(0.1*self.max_hp)
 
         elif "j" in self.keys_down:
+            # self.attack_has_dealt_damage = False
             if "ctrl" not in self.keys_down and "shift" not in self.keys_down and str(self.status) != "jab1":
                 self.status = Action("jab1")
 
@@ -187,7 +190,11 @@ class Player(Sprite):
         if self.previous != str(self.status):
             self.apply_left_correction()
 
-        self.previous = str(self.status)
+        if self.previous != str(self.status):
+            for enemy_name in self.attack_has_dealt_damage.keys():
+                self.attack_has_dealt_damage[enemy_name] = False
+                
+            self.previous = str(self.status)
 
         return delta
 
@@ -363,3 +370,6 @@ class Player(Sprite):
     def get_info(self):
         "Return info for enemies to know what I'm doing and my location."
         return {"status": self.status, "x": self.x}
+
+    def new_enemy(self, enemy):
+        self.attack_has_dealt_damage[enemy.name] = False

@@ -2,6 +2,7 @@ from pygame import image, Surface
 from pygame.transform import flip
 from random import random
 from pprint import pprint
+from uuid import uuid4
 import json
 import os
 
@@ -37,6 +38,7 @@ class Bot:
         gravity,
         my_dir,
         bg_info,
+        name=None,
         y=None,
         xvel=50,
         direction: str = "null",
@@ -46,6 +48,9 @@ class Bot:
         critical_shield=0.2,
         happy_shield=0.65
     ):
+        if name == None:
+            self.name = str(uuid4())
+
         with open(__file__.replace(os.path.basename(__file__), "")+f"../{my_dir}_topology.json") as f:
             self.topology = json.load(f)
         try:
@@ -175,7 +180,7 @@ class Bot:
             self.frame += 1
 
             if self.frame > len(self.surfaces[str(self.status)]):
-                print('setting frame to 1')
+                # print('setting frame to 1')
                 self.frame = 1
                 # self.status = "idle"
 
@@ -191,7 +196,7 @@ class Bot:
             if self.topology["stop"][str(self.status)] == "beginning":
                 self.frame += 1
                 if self.frame == len(self.surfaces[str(self.status)]):
-                    print('setting frame to 1 adlfkjds')
+                    #print('setting frame to 1 adlfkjds')
                     self.frame = 1
                     #self.status.status = "done"
                     self.status = "idle"
@@ -226,12 +231,12 @@ class Bot:
         A is the max shield
         A-B is the critical shield
         B is the max shield minus critical shield"""
-        if self.hp > self.critical_health:
+        if self.hp > self.critical_health*self.max_hp:
             return 0.
 
         H = self.shield
         A = self.max_shield
-        B = A - self.critical_shield
+        B = A - self.critical_shield*self.max_shield
         
         if H < self.critical_shield:
             return 0.95
@@ -293,3 +298,14 @@ class Bot:
 
         self.still_coords['x'] += self.shift
         self.x += self.shift
+
+
+    def adjust_y_to_bottom(self):
+        """If the current status specifies that the y-position of the character needs
+        to change due to a changing bottom location then adjust according to the
+        specifications of the character status"""
+        if str(self.status) in self.topology["bottom"].keys():
+            try:
+                self.y = self.bg_info['floor']-self.topology['bottom'][str(self.status)]['values'][self.frame-1]
+            except Exception as e:
+                pass

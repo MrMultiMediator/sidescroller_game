@@ -27,15 +27,16 @@ class Fighter(Bot):
         gravity,
         my_dir,
         bg_info,
+        name=None,
         y=None,
         xvel=50,
         direction: str = "null",
-        max_hp=1000.,
-        max_shield=1000.,
+        max_hp=100.,
+        max_shield=100.,
         critical_health=0.4,
-        critical_shield=0.2,
+        critical_shield=0.4,
         happy_shield=0.65,
-        decision_frequency: int=5,
+        decision_frequency: int=10,
         confident_strike=0.85,
         uncertainty=10,
         bias=0,
@@ -49,6 +50,7 @@ class Fighter(Bot):
         run_vel=32
     ):
         super().__init__(
+            name=name,
             x=x,
             gravity=gravity,
             my_dir=my_dir,
@@ -75,12 +77,19 @@ class Fighter(Bot):
 
         self.walk_vel = walk_vel
         self.run_vel = run_vel
-        self.damage = {'jab1': 15, 'uppercut1': 5, 'kick1': 25}
+        self.damage = {'jab1': 45, 'uppercut1': 15, 'kick1': 65}
+        self.attack_has_dealt_damage = False
 
     def update(self, window_xvel, player_info):
         # TODO implement a safe stopping distance for an enemy in retreat, or at least a point
         #      where they switch to walking if they're far enough away.
         super().update(window_xvel)
+
+        if self.status == "fall1":
+            self.adjust_y_to_bottom()
+            self.post_update()
+            return
+
         self.update_health()
         self.player_info = player_info
 
@@ -102,16 +111,16 @@ class Fighter(Bot):
                 self.frame = 1
             if self.status == "walk":
                 if self.shield > 2.5*self.critical_shield*self.max_shield:
-                    print(f'running {self.shield}')
                     self.status = "run"
+                    self.frame = 1
                     self.x_vel = self.run_vel
 
             if self.status == "run":
                 self.shield -= self.max_shield*0.01
 
                 if self.shield < 1.25*self.critical_shield*self.max_shield:
-                    print(f'walking {self.shield}')
                     self.status = "walk"
+                    self.frame = 1
                     self.x_vel = self.walk_vel
 
         elif self.status == "walk" or self.status == "run":
@@ -126,6 +135,7 @@ class Fighter(Bot):
             elif self.direction == "left":
                 self.x -= self.x_vel
 
+        self.adjust_y_to_bottom()
         self.post_update()
 
     def update_health(self):
@@ -193,7 +203,24 @@ class Fighter(Bot):
             if self.distance_estimate(atk) < distance_goal:
                 self.frame = 1
                 self.status = atk
-                print(f"Striking player with attack {atk}")
+                self.attack_has_dealt_damage = False
+                #print(f"Striking player with attack {atk}")
+
+    def take_damage(self, amount):
+        if self.shield > 0:
+            if self.shield >= amount:
+                self.shield -= amount
+            else:
+                amount -= self.shield
+                self.shield = 0
+                self.hp -= amount
+        else:
+            self.hp -= amount
+
+        if self.hp <= 0 and self.status != "fall1":
+            self.hp = 0
+            self.frame = 1
+            self.status = "fall1"
 
         # TODO determine which attacks are in range and randomly sample from those to decide your attack
 
